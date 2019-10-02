@@ -59,7 +59,7 @@ class ClienteDetalle(APIView):
         try:
             cliente = Cliente.objects.get(codigo=codigo, eliminado=False)
             cliente.deleted()
-            return Response({'Error': 'El cliente se eliminó con éxito'})
+            return Response({'mensaje': 'El cliente se eliminó con éxito'})
         except:
             return Response({'Error': 'El cliente no existe '})
 
