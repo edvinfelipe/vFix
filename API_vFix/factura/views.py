@@ -40,4 +40,4 @@ class FacturaDetalle(APIView):
         except:
             return Response({'Error': 'La factura no existe'})
         factura.deleted()
-        return Response({'mensaje':'La factura se eliminó con éxito'})
+        return Response({'mensaje':'La factura se canceló con éxito'})
