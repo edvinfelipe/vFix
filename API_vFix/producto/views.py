@@ -1,8 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Producto, Imagenes
-from .serializers import ProductoSerializers, ProductoSerializerModificacion
-
+from .serializers import ProductoSerializers, ProductoSerializerModificacion, FiltrarProductoSerializers
+from categoria.models import Categoria
+from django.db.models import  ExpressionWrapper, F, Q
 # Create your views here.
 def convertir_datos_json(data):
     json = {}
@@ -75,6 +76,7 @@ class ProductoAPIView(APIView):
         serializer = ProductoSerializers(productos, many=True)
         return Response(serializer.data)
 
+# Obtener un sólo producto
 class ProductoDetalle(APIView):
 
     def put(self, request,codigo):
@@ -118,5 +120,17 @@ class ProductoDetalle(APIView):
             producto.deleted()
             return Response({'mensaje':'Se eliminó el producto con éxito'})
         except:
-            return Response({'Error': 'Hubo error en la eliminación'})
-            
+            return Response({'Error': 'Hubo error en la eliminación'})        
+
+# Obtener los productos de una categoria
+class FiltrarProductoCategoria(APIView):
+
+    def get(self, request, categoriaId):
+        
+        if Categoria.objects.filter(pk=categoriaId).exists():
+
+            productos = Producto.objects.filter(categoriaId=categoriaId, eliminado=False)
+            serializer = FiltrarProductoSerializers(productos, many=True)
+            return Response(serializer.data)
+        
+        return Response({'Error':'No existe la categoria'})

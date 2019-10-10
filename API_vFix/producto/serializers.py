@@ -46,3 +46,8 @@ class ProductoSerializerModificacion( serializers.ModelSerializer):
         for imagen in imagenes_agregar:
             Imagenes.objects.create(productoId=instance, **imagen)
         return instance
+
+class FiltrarProductoSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['codigo','nombre','existencia']

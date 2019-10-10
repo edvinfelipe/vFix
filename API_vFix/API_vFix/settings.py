@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'producto',
     'cliente',
     'factura',
+    'detallefactura',
     'recursoshumanos',
 ]
 
