@@ -129,7 +129,7 @@ class FiltrarProductoCategoria(APIView):
         
         if Categoria.objects.filter(pk=categoriaId).exists():
 
-            productos = Producto.objects.filter(categoriaId=categoriaId, eliminado=False)
+            productos = Producto.objects.filter(categoriaId=categoriaId, eliminado=False ,existencia__lte=5)
             serializer = FiltrarProductoSerializers(productos, many=True)
             return Response(serializer.data)
         
