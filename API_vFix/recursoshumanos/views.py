@@ -51,3 +51,13 @@ class RHDetalle(APIView):
             serializer.save()
             return Response({'mensaje':'El empleado se modificó con éxito'})
         return Response(serializer.errors)
+    
+    def delete(self, request, codigo):
+        try:
+            rh = RH.objects.get(codigo=codigo, eliminado=False)
+            rh.deleted()
+            return Response({'mensaje':'El empleado se eliminó con éxito'})
+        except:
+            return Response({'Error':'El empleado no existe'})
+        
+        

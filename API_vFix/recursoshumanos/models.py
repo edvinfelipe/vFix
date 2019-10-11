@@ -11,4 +11,8 @@ class RH(models.Model):
     #Usuario y contrasenio 
     usuario     = models.CharField(max_length=45)
     contrasenia = models.CharField(max_length=30)
+
+    def deleted(self):
+        self.eliminado=True
+        self.save()
     

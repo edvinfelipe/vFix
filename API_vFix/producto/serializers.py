@@ -48,6 +48,7 @@ class ProductoSerializerModificacion( serializers.ModelSerializer):
         return instance
 
 class FiltrarProductoSerializers(serializers.ModelSerializer):
+    imagenes = ImagenSerializer(many = True)
     class Meta:
         model = Producto
-        fields = ['codigo','nombre','existencia']
+        fields = ['codigo','nombre','existencia','imagenes']
