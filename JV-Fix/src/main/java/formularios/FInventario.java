@@ -5,12 +5,47 @@
  */
 package formularios;
 
+import com.google.common.io.Files;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.representation.Form;
+import com.sun.jersey.core.util.Base64;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.CoreProtocolPNames;
+import sun.net.www.http.HttpClient;
+
+
 /**
  *
  * @author User
  */
 public class FInventario extends javax.swing.JPanel {
-
+    File archivo;
     /**
      * Creates new form FInventario
      */
@@ -61,6 +96,8 @@ public class FInventario extends javax.swing.JPanel {
         lblSelImg = new javax.swing.JLabel();
         lblMarca = new javax.swing.JLabel();
         cbCategoria = new javax.swing.JComboBox<>();
+        btnEliCategoria = new javax.swing.JButton();
+        btnModCategoria = new javax.swing.JButton();
 
         pnlGeneral.setBackground(new java.awt.Color(34, 51, 59));
         pnlGeneral.setMinimumSize(new java.awt.Dimension(1280, 680));
@@ -96,6 +133,11 @@ public class FInventario extends javax.swing.JPanel {
         tfCodigo.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfCodigo.setForeground(new java.awt.Color(255, 255, 255));
         tfCodigo.setBorder(null);
+        tfCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfCodigoKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, 200, -1));
         pnlGeneral.add(sepCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 200, 200, -1));
 
@@ -103,6 +145,11 @@ public class FInventario extends javax.swing.JPanel {
         tfNombre.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfNombre.setForeground(new java.awt.Color(255, 255, 255));
         tfNombre.setBorder(null);
+        tfNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfNombreKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, 200, -1));
         pnlGeneral.add(sepNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 280, 200, 10));
 
@@ -110,6 +157,11 @@ public class FInventario extends javax.swing.JPanel {
         tfModelo.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfModelo.setForeground(new java.awt.Color(255, 255, 255));
         tfModelo.setBorder(null);
+        tfModelo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfModeloKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfModelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 340, 200, -1));
         pnlGeneral.add(sepModelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 360, 200, -1));
 
@@ -117,6 +169,11 @@ public class FInventario extends javax.swing.JPanel {
         tfColor.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfColor.setForeground(new java.awt.Color(255, 255, 255));
         tfColor.setBorder(null);
+        tfColor.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfColorKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfColor, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 420, 200, -1));
 
         lblImagen.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -128,6 +185,11 @@ public class FInventario extends javax.swing.JPanel {
         tfMarca.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfMarca.setForeground(new java.awt.Color(255, 255, 255));
         tfMarca.setBorder(null);
+        tfMarca.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfMarcaKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 100, 200, -1));
         pnlGeneral.add(sepMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 120, 200, -1));
 
@@ -140,6 +202,16 @@ public class FInventario extends javax.swing.JPanel {
         tfTipo.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfTipo.setForeground(new java.awt.Color(255, 255, 255));
         tfTipo.setBorder(null);
+        tfTipo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfTipoActionPerformed(evt);
+            }
+        });
+        tfTipo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfTipoKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 180, 200, -1));
         pnlGeneral.add(sepTipo, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 200, 200, -1));
 
@@ -152,6 +224,11 @@ public class FInventario extends javax.swing.JPanel {
         tfDescripcion.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfDescripcion.setForeground(new java.awt.Color(255, 255, 255));
         tfDescripcion.setBorder(null);
+        tfDescripcion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfDescripcionKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 260, 200, -1));
         pnlGeneral.add(sepDescripcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 280, 200, -1));
 
@@ -164,6 +241,11 @@ public class FInventario extends javax.swing.JPanel {
         tfExistencia.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfExistencia.setForeground(new java.awt.Color(255, 255, 255));
         tfExistencia.setBorder(null);
+        tfExistencia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfExistenciaKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 340, 200, -1));
         pnlGeneral.add(sepExistencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 360, 200, -1));
 
@@ -176,6 +258,11 @@ public class FInventario extends javax.swing.JPanel {
         tfPrecio.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         tfPrecio.setForeground(new java.awt.Color(255, 255, 255));
         tfPrecio.setBorder(null);
+        tfPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfPrecioKeyTyped(evt);
+            }
+        });
         pnlGeneral.add(tfPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 420, 200, -1));
         pnlGeneral.add(sepPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 440, 200, -1));
 
@@ -188,6 +275,11 @@ public class FInventario extends javax.swing.JPanel {
         pnlGeneral.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 510, 310, 80));
 
         btnElegirImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Elegir imagen.png"))); // NOI18N
+        btnElegirImg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnElegirImgActionPerformed(evt);
+            }
+        });
         pnlGeneral.add(btnElegirImg, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 340, 140, 30));
 
         lblSelImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Fondo imagen.png"))); // NOI18N
@@ -199,8 +291,19 @@ public class FInventario extends javax.swing.JPanel {
         pnlGeneral.add(lblMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 100, -1, -1));
 
         cbCategoria.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccionar...", "Agregar" }));
+        cbCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbCategoriaActionPerformed(evt);
+            }
+        });
         pnlGeneral.add(cbCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 200, 30));
+
+        btnEliCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Eliminar categoría.png"))); // NOI18N
+        pnlGeneral.add(btnEliCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, 80, 20));
+
+        btnModCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Modificar categoría.png"))); // NOI18N
+        pnlGeneral.add(btnModCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 80, 20));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -215,13 +318,151 @@ public class FInventario extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        // TODO add your handling code here:
+        try {
+            Client client = Client.create();
+            
+            //WebResource webResource = client.resource(
+            //        "http://localhost:8000/api/productos/");
+            
+            WebResource webResource = client.resource(
+                    "http://localhost:8000/api/imagenes/?codigo=PF9XIF04X2OL8CMKSCRQK3PFOZIB83");
+            
+            //String input = "{\"codigo\":\""+tfCodigo.getText()+"\",\"nombre\":\""+tfNombre.getText()+"\""
+            //        + ",\"color\":\""+tfCodigo.getText()+"\",\"modelo\":\""+tfModelo.getText()+"\""
+            //        + ",\"marca\":\""+tfMarca.getText()+"\",\"tipo\":\""+tfTipo.getText()+"\""
+            //        + ",\"descripcion\":\""+tfDescripcion.getText()+"\",\"existencia\":"+Integer.parseInt(tfExistencia.getText())
+            //        + ",\"precio\":"+Integer.parseInt(tfPrecio.getText())+",\"categoriaId\":"+1+"}";
+            MultivaluedMap<String, File> formData = new MultivaluedHashMap<>();
+            /*formData.add("codigo", tfCodigo.getText());
+            formData.add("nombre", tfNombre.getText());
+            formData.add("color", tfColor.getText());
+            formData.add("modelo", tfModelo.getText());
+            formData.add("marca", tfMarca.getText());
+            formData.add("tipo", tfTipo.getText());
+            formData.add("descripcion", tfDescripcion.getText());
+            formData.add("existencia", tfExistencia.getText());
+            formData.add("precio", tfPrecio.getText());
+            formData.add("categoriaId", "1");*/
+            formData.add("imagen", archivo);
+            
+            //formData.add("imagenes");
+            
+            
+            ClientResponse response = webResource.type(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+                    .post(ClientResponse.class, formData);
+            
+            if (response.getStatus() != 200){
+                System.out.println(response.getStatus());
+                throw new RuntimeException("Failed : HTTP error code : "
+                        + response.getStatus());
+            }
+            
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btnIngresarActionPerformed
+
+    private void cbCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbCategoriaActionPerformed
+        if (cbCategoria.getSelectedIndex() == cbCategoria.getItemCount()-1)
+        {
+            cbCategoria.removeItemAt(cbCategoria.getItemCount()-1);
+            cbCategoria.addItem(JOptionPane.showInputDialog(null, "Ingrese una nueva categoría"));
+            cbCategoria.addItem("Agregar");
+        }   
+    }//GEN-LAST:event_cbCategoriaActionPerformed
+
+    private void tfCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfCodigoKeyTyped
+        if (tfCodigo.getText().length()>20)
+            evt.consume();
+    }//GEN-LAST:event_tfCodigoKeyTyped
+
+    private void tfNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfNombreKeyTyped
+        if (tfNombre.getText().length()>55)
+            evt.consume();
+    }//GEN-LAST:event_tfNombreKeyTyped
+
+    private void tfModeloKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfModeloKeyTyped
+        if (tfModelo.getText().length()>45)
+            evt.consume();
+    }//GEN-LAST:event_tfModeloKeyTyped
+
+    private void tfColorKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfColorKeyTyped
+        if (tfColor.getText().length()>35)
+            evt.consume();
+    }//GEN-LAST:event_tfColorKeyTyped
+
+    private void tfMarcaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfMarcaKeyTyped
+        if (tfMarca.getText().length()>45)
+            evt.consume();
+    }//GEN-LAST:event_tfMarcaKeyTyped
+
+    private void tfTipoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfTipoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfTipoActionPerformed
+
+    private void tfTipoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfTipoKeyTyped
+        if (tfTipo.getText().length()>45)
+            evt.consume();
+    }//GEN-LAST:event_tfTipoKeyTyped
+
+    private void tfDescripcionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfDescripcionKeyTyped
+        if (tfDescripcion.getText().length()>200)
+            evt.consume();
+    }//GEN-LAST:event_tfDescripcionKeyTyped
+
+    private void tfExistenciaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfExistenciaKeyTyped
+        if (tfExistencia.getText().length()>10)
+            evt.consume();
+    }//GEN-LAST:event_tfExistenciaKeyTyped
+
+    private void tfPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfPrecioKeyTyped
+        if (tfPrecio.getText().length()>10)
+            evt.consume();
+    }//GEN-LAST:event_tfPrecioKeyTyped
+
+    private void btnElegirImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirImgActionPerformed
+        try {
+            JFileChooser filechooser = new JFileChooser();
+            filechooser.setDialogTitle("Buscar imagen");
+            if (filechooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                File archivo = new File(filechooser.getSelectedFile().toString());
+                this.archivo = archivo;
+                System.out.println(archivo.toString());
+                Image img = new ImageIcon(archivo.toString()).getImage();
+                ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                lblSelImg.setIcon(img2);
+                
+                ByteArrayOutputStream baos=new ByteArrayOutputStream(1000);
+                BufferedImage imagen;
+                imagen = ImageIO.read(archivo);
+                ImageIO.write(imagen, Files.getFileExtension(archivo.getAbsolutePath()), baos);
+                baos.flush();
+                String base64String = Base64.encode(baos.toByteArray()).toString();
+                baos.close();
+                byte[] bytearray = Base64.decode(base64String);
+                System.out.println(toBinary(bytearray));
+                NewMain.main(archivo);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FInventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnElegirImgActionPerformed
+
+    String toBinary(byte[] bytes) {
+        StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
+        for (int i = 0; i < Byte.SIZE * bytes.length; i++) {
+            sb.append((bytes[i / Byte.SIZE] << i % Byte.SIZE & 0x80) == 0 ? '0' : '1');
+        }
+        return sb.toString();
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnElegirImg;
+    private javax.swing.JButton btnEliCategoria;
     private javax.swing.JButton btnIngresar;
+    private javax.swing.JButton btnModCategoria;
     private javax.swing.JComboBox<String> cbCategoria;
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblCodigo;
