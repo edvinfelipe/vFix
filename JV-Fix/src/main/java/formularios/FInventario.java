@@ -332,8 +332,8 @@ public class FInventario extends javax.swing.JPanel {
             //        + ",\"marca\":\""+tfMarca.getText()+"\",\"tipo\":\""+tfTipo.getText()+"\""
             //        + ",\"descripcion\":\""+tfDescripcion.getText()+"\",\"existencia\":"+Integer.parseInt(tfExistencia.getText())
             //        + ",\"precio\":"+Integer.parseInt(tfPrecio.getText())+",\"categoriaId\":"+1+"}";
-            MultivaluedMap<String, File> formData = new MultivaluedHashMap<>();
-            /*formData.add("codigo", tfCodigo.getText());
+            MultivaluedMap<String, Object> formData = new MultivaluedHashMap<>();
+            formData.add("codigo", tfCodigo.getText());
             formData.add("nombre", tfNombre.getText());
             formData.add("color", tfColor.getText());
             formData.add("modelo", tfModelo.getText());
@@ -342,8 +342,8 @@ public class FInventario extends javax.swing.JPanel {
             formData.add("descripcion", tfDescripcion.getText());
             formData.add("existencia", tfExistencia.getText());
             formData.add("precio", tfPrecio.getText());
-            formData.add("categoriaId", "1");*/
-            formData.add("imagen", archivo);
+            formData.add("categoriaId", "1");
+            //formData.add("imagen", archivo);
             
             //formData.add("imagenes");
             
