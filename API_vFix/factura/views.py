@@ -68,14 +68,7 @@ class FacturaMovil(APIView):
 
                 suma = Factura.objects.filter(fecha__range=(start_date, end_date)).aggregate(Sum('total'))
                 json[month+1] = suma.get('total__sum')
-                print("month "+str(month+1) + "  monto "+str(suma.get('total__sum')))
-                #json[month+1] = sum
-                
-            
-                    
-            #factures = Factura.objects.filter(fecha__year=year)
-            #print(factures)
-            #serializer = FacturaMovilSerializers(factures, many=True)
+                          
             return Response(json)
         except:
             return Response({'Error': 'Hubo error en el filtrado'})
