@@ -1,7 +1,9 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import FacturaSerializers
+from .serializers import FacturaSerializers, FacturaMovilSerializers
 from .models import Factura
+from django.db.models import Sum
+import datetime
 
 # Create your views here.
 class FacturaAPIView(APIView):
@@ -41,3 +43,39 @@ class FacturaDetalle(APIView):
             return Response({'Error': 'La factura no existe'})
         factura.deleted()
         return Response({'mensaje':'La factura se canceló con éxito'})
+
+class FacturaMovil(APIView):
+    def get(self, request, year):
+
+        try:
+            json = {}
+            for month in range(12):
+                start_date = datetime.date(year, month+1,1)
+                
+
+                if (month+1) == 2:
+                    end_date = datetime.date(year, month+1, 28)
+                elif (month+1) == 4:
+                    end_date = datetime.date(year, month+1, 30)
+                elif (month+1) == 6:
+                    end_date = datetime.date(year, month+1, 30)
+                elif (month+1) == 9:
+                    end_date = datetime.date(year, month+1, 30)
+                elif (month+1) == 11:
+                    end_date = datetime.date(year, month+1, 30)
+                else:
+                    end_date = datetime.date(year, month+1, 31)
+
+                suma = Factura.objects.filter(fecha__range=(start_date, end_date)).aggregate(Sum('total'))
+                json[month+1] = suma.get('total__sum')
+                print("month "+str(month+1) + "  monto "+str(suma.get('total__sum')))
+                #json[month+1] = sum
+                
+            
+                    
+            #factures = Factura.objects.filter(fecha__year=year)
+            #print(factures)
+            #serializer = FacturaMovilSerializers(factures, many=True)
+            return Response(json)
+        except:
+            return Response({'Error': 'Hubo error en el filtrado'})
