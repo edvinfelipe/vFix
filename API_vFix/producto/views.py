@@ -1,9 +1,10 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.views import APIView
 from .models import Producto, Imagenes
-from .serializers import ProductoSerializers, ProductoSerializerModificacion, FiltrarProductoSerializers
+from .serializers import ProductoSerializers, ProductoSerializerModificacion, FiltrarProductoSerializers, FiltrarProductoNomCodSerializers
 from categoria.models import Categoria
-from django.db.models import  ExpressionWrapper, F, Q
+
 # Create your views here.
 def convertir_datos_json(data):
     json = {}
@@ -108,8 +109,8 @@ class ProductoDetalle(APIView):
     
     def get(self, request, codigo):
         try:
-            producto = Producto.objects.get(codigo=codigo, eliminado= False)
-            serializer = ProductoSerializers(producto, many= False)
+            producto = Producto.objects.filter(codigo__startswith=codigo, eliminado= False)
+            serializer = ProductoSerializers(producto, many=True)
             return Response(serializer.data)
         except:
             return Response({'Error': 'Hubo un error en la obtención'})
@@ -122,7 +123,25 @@ class ProductoDetalle(APIView):
         except:
             return Response({'Error': 'Hubo error en la eliminación'})        
 
-# Obtener los productos de una categoria
+# Filtrar un producto por codigo y nombre, Select * from producto where LIKE;
+class FiltrarProducto(APIView):
+    def get(self, request):
+        codigo  = request.GET.get('codigo')
+        nombre  = request.GET.get('nombre')
+
+        try:
+
+            if (codigo is None) and (nombre != None):
+                productos = Producto.objects.filter(nombre__startswith=nombre, eliminado=False)
+            elif (codigo != None) and (nombre is None):
+                productos = Producto.objects.filter(codigo__startswith=codigo, eliminado=False)
+            
+            serializer = FiltrarProductoNomCodSerializers(productos, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# Obtener los productos de una categoria móvil
 class FiltrarProductoCategoria(APIView):
 
     def get(self, request, categoriaId):
