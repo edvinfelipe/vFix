@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class Empleados {
     
-    private final HttpClient httpClient;
+    private HttpClient httpClient;
     private MultipartEntity reqEntity;
     private HttpPost httpPost;
     private HttpPut httpPut;
@@ -42,26 +42,31 @@ public class Empleados {
     private final String url;
     
     public Empleados(String url){
-        this.httpClient = new DefaultHttpClient();
         this.url=url;
     }
     
     public void insertarEmpleado(String codigo, String nombre,boolean rol,String usuario,String contrasena,File fotografia){
         
         try {
+            this.httpClient = new DefaultHttpClient();
             this.httpPost = new HttpPost(url);
-            FileBody data = new FileBody(fotografia);
+            
             this.reqEntity = new MultipartEntity();
             
             reqEntity.addPart("codigo",new StringBody(codigo));
             reqEntity.addPart("nombre",new StringBody(nombre));
             reqEntity.addPart("rol",new StringBody(String.valueOf(rol)));
-            reqEntity.addPart("imagen",data);
+            if(fotografia!=null){
+                FileBody data = new FileBody(fotografia);
+                reqEntity.addPart("imagen",data);
+            }
             reqEntity.addPart("usuario",new StringBody(usuario));
             reqEntity.addPart("contrasenia",new StringBody(contrasena));
             httpPost.setEntity(reqEntity);
             HttpResponse response = httpClient.execute(httpPost);
-            
+            HttpEntity resEntity = response.getEntity();
+            EntityUtils.consume(resEntity);
+            httpClient.getConnectionManager().shutdown();
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Empleados.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -72,16 +77,24 @@ public class Empleados {
     
     public void modificarEmpleado(String nombre,boolean rol, File fotografia){
         
+        this.httpClient = new DefaultHttpClient();
         this.httpPut = new HttpPut(url);
         this.reqEntity = new MultipartEntity();
         
         try {
             reqEntity.addPart("nombre",new StringBody(nombre));
             reqEntity.addPart("rol",new StringBody(String.valueOf(rol)));
-            //reqEntity.addPart("imagen",data);
+            if(fotografia!=null){
+                FileBody data = new FileBody(fotografia);
+                reqEntity.addPart("imagen",data);
+            }
             httpPost.setEntity(reqEntity);
             HttpResponse response = httpClient.execute(httpPut);
-            
+            HttpEntity resEntity = response.getEntity();
+            EntityUtils.consume(resEntity);
+            httpClient.getConnectionManager().shutdown();
+            //CloseableHttpResponse response = null;
+            //response = (CloseableHttpResponse) httpClient.execute(httpPost);
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Empleados.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -95,6 +108,7 @@ public class Empleados {
         
         try {
             String result;
+            this.httpClient = new DefaultHttpClient();
             this.httpGet = new HttpGet(url);
             this.gson = new Gson();
             CloseableHttpResponse response;
@@ -105,6 +119,7 @@ public class Empleados {
             result = EntityUtils.toString(entity, "UTF-8");
             Type empleados = new TypeToken<List<Empleado>>(){}.getType();
             List<Empleado> listaEmpleados = gson.fromJson(result,empleados);
+            httpClient.getConnectionManager().shutdown();
             return listaEmpleados;
         
         } catch (IOException ex) {

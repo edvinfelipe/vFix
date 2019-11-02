@@ -24,7 +24,13 @@ public class AdaptadorEmpleados {
     public DefaultTableModel obtenerModelo(){
         
         String[] columnas = {"Codigo","Empleado","rol"};
-        this.modelo = new DefaultTableModel(columnas,0);
+        this.modelo = new DefaultTableModel(columnas,0){
+            
+            @Override
+            public boolean isCellEditable(int fila,int columna){
+                return false;
+            }
+        };
         
         Object[] listaEmpleado = new Object[3];
         
