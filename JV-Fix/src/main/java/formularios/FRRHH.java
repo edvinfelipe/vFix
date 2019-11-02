@@ -397,7 +397,10 @@ public class FRRHH extends javax.swing.JPanel {
         rbAdministrador.setSelected(false);
         rbEmpleado.setSelected(false);
     }
-
+    
+    private void cargarImagen(){
+       
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonFotografia;
     private javax.swing.JButton botonModificar;
