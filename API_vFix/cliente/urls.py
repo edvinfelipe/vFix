@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import ClienteAPIView, ClienteDetalle
+from cliente import views
 urlpatterns = [
-    path('api/clientes/', ClienteAPIView.as_view()),
-    path('api/clientes/<slug:codigo>/', ClienteDetalle.as_view()),
+    path('api/clientes/', views.ClienteAPIView.as_view()),
+    path('api/clientes/filtrar/', views.ClienteFilter.as_view()),
+    path('api/clientes/<slug:codigo>/', views.ClienteDetalle.as_view()),
 ]

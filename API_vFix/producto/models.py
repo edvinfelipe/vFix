@@ -19,6 +19,10 @@ class Producto(models.Model):
     def deleted(self):
         self.eliminado = True
         self.save()
+    
+    def updated(self, decrement):
+         self.existencia = self.existencia - decrement
+         self.save()
 
 class Imagenes( models.Model ):
     imagen = models.ImageField()
