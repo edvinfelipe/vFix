@@ -9,13 +9,17 @@ package formularios;
 import PackegeRecursosHumanos.AdaptadorEmpleados;
 import PackegeRecursosHumanos.Empleado;
 import PackegeRecursosHumanos.Empleados;
+import PackegeRecursosHumanos.FotografiaEmpleado;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -38,6 +42,7 @@ public class FRRHH extends javax.swing.JPanel {
        
         modificarEmpleados();
         mostrarEmpleados();
+        //cargarImagen();
         
     }
 
@@ -292,6 +297,7 @@ public class FRRHH extends javax.swing.JPanel {
                    txtContrasena.getText(),fotografia);
            empleado = empleados.mostrarEmpleados();
            if(empleado!=null){
+                tablaEmpleados.setDefaultRenderer(Object.class, new FotografiaEmpleado());
                 AdaptadorEmpleados adaptadorEmpleados = new AdaptadorEmpleados(empleado);
                 tablaEmpleados.setModel(adaptadorEmpleados.obtenerModelo());
            }
@@ -306,11 +312,16 @@ public class FRRHH extends javax.swing.JPanel {
         JFileChooser jFileChooser = new JFileChooser();
         int opcion = jFileChooser.showOpenDialog(this);
         if(opcion == JFileChooser.APPROVE_OPTION){
+            File ruta = jFileChooser.getSelectedFile();
             String rutaFoto = jFileChooser.getSelectedFile().getPath();
+            String r = ruta.getPath();
             fotografia = new File(rutaFoto);
-            Image imagen = new ImageIcon(getClass().getResource(rutaFoto)).getImage();
-            Image newimg = imagen.getScaledInstance(lblElegirFtg.getWidth(),lblElegirFtg.getHeight(),java.awt.Image.SCALE_SMOOTH);
-            ImageIcon imageIcon = new ImageIcon(newimg); 
+            System.out.println("rutaFoto "+ r);
+            System.out.println("rutaFoto2 "+ getClass().getResource(r));
+            //Image imagen = new ImageIcon(getClass().getResource(r)).getImage();
+            
+            //Image newimg = imagen.getScaledInstance(lblElegirFtg.getWidth(),lblElegirFtg.getHeight(),java.awt.Image.SCALE_SMOOTH);
+            ImageIcon imageIcon = new ImageIcon(r); 
             lblElegirFtg.setIcon(imageIcon);
         }
         
@@ -374,7 +385,9 @@ public class FRRHH extends javax.swing.JPanel {
         Empleados empleados = new Empleados("http://icris17.pythonanywhere.com/api/recursoshumanos/");
         empleado = empleados.mostrarEmpleados();
            if(empleado!=null){
+                tablaEmpleados.setDefaultRenderer(Object.class, new FotografiaEmpleado());
                 AdaptadorEmpleados adaptadorEmpleados = new AdaptadorEmpleados(empleado);
+                tablaEmpleados.setRowHeight(50);
                 tablaEmpleados.setModel(adaptadorEmpleados.obtenerModelo());
            }
     }
@@ -399,7 +412,11 @@ public class FRRHH extends javax.swing.JPanel {
     }
     
     private void cargarImagen(){
-       
+            try {
+                lblElegirFtg.setIcon(new ImageIcon(new URL("http://icris17.pythonanywhere.com/media/bart1.jpg")));
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(FRRHH.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonFotografia;
