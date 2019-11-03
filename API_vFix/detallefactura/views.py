@@ -38,4 +38,3 @@ class DetalleFacturaFilter(APIView):
             return Response(serializer.data)
         except:
             return Response({'Error':'No existe detalle de factura'})
-

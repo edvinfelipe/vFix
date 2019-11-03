@@ -1,5 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import status
 from .models import RH
 from .serializers import RHSerializers, RHSerializersModificaicon
 
@@ -17,7 +22,15 @@ class RHAPIView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            
+            if serializer.data.get('rol'):
+                usario      = serializer.data.get('usuario')
+                password    = serializer.data.get('contrasenia')
+                correo      = 'felipe@gmail.com'
+                user = User.objects.create_user(username=usario, email=correo, password=password)
+                print('Se creo el usuario')
+                
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors)
         
         
@@ -32,6 +45,10 @@ class RHAPIView(APIView):
 class RHDetalle(APIView):
 
     def get(self, request, codigo):
+        user = request.user
+
+        print('User')
+        print(user)
         try:
             rh = RH.objects.get(codigo=codigo, eliminado=False)
             serializer = RHSerializers(rh, many=False)
@@ -60,4 +77,18 @@ class RHDetalle(APIView):
         except:
             return Response({'Error':'El empleado no existe'})
         
-        
+
+class Login(APIView):    
+    permission_classes = [AllowAny]   
+    def post(self,request):
+        username = request.data.get('usuario')
+        password = request.data.get('contrasenia')
+
+        user = authenticate(username=username, password=password)
+
+        if not user:
+            return Response({'Error': 'La contraseña o el usuario es incorrecto'}, status=status.HTTP_400_BAD_REQUEST)
+    
+        token, _ = Token.objects.get_or_create(user=user)
+        data = {'token':token.key}
+        return Response(data,status=status.HTTP_200_OK)

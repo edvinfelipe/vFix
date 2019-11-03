@@ -74,7 +74,7 @@ class ClienteFilter(APIView):
 
         try:
             if (codigo is None) and (nit != None):
-                clientes = Cliente.objects.filter(nit__startswith=nombre, eliminado=False)
+                clientes = Cliente.objects.filter(nit__startswith=nit, eliminado=False)
             elif (codigo != None) and (nit is None):
                 clientes = Cliente.objects.filter(codigo__startswith=codigo, eliminado=False)
             
