@@ -16,7 +16,7 @@ public class Empleado {
         private boolean rol;
         private String imagen;
         private String usuario;
-        private String contresenia;
+        private String contrasenia;
     
     public Empleado(){
         
@@ -43,6 +43,6 @@ public class Empleado {
     }
 
     public String getContresenia() {
-        return contresenia;
+        return contrasenia;
     }
 }
