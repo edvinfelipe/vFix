@@ -5,6 +5,8 @@
  */
 package formularios;
 
+import campos.Categoria;
+import campos.Producto;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -13,16 +15,30 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import requestget.GetCategoria;
+import requestget.GetInventario;
+import requests.EstructuraPostPut;
+import requests.Requests;
 
 /**
  *
@@ -30,13 +46,128 @@ import org.apache.http.util.EntityUtils;
  */
 public class FModInventario extends javax.swing.JPanel {
 
-    /**
-     * Creates new form FModInventario
-     */
+    File archivo;
+    GetInventario requestGet = new GetInventario();
+    DefaultTableModel productos = new DefaultTableModel();
+    GetCategoria getCategoria = new GetCategoria();
+    String codigoSeleccionado = "";
+    int filaSeleccionada = -1;
+    List<Categoria> datosCategoria = new ArrayList<>();
+    GetCategoria categoria = new GetCategoria();
+    Producto objetoActual = null;
+    int contImagenes = 0;
+    int imagenActual = 0;
+    List<Producto> listaProductos = new ArrayList<>();
+    List<String> nuevasImagenes = new ArrayList<>();
+    List<EstructuraPostPut> estructuraPut = new ArrayList<>();
+    List<String> variablesInventario = new ArrayList<>();
+    List<EstructuraPostPut> imagenes = new ArrayList<>();
+    Requests requests = new Requests();
+    
     public FModInventario() {
         initComponents();
+        productos.addColumn("Código");
+        productos.addColumn("Categoría");
+        productos.addColumn("Nombre");
+        productos.addColumn("Modelo");
+        productos.addColumn("Color");
+        productos.addColumn("Marca");
+        productos.addColumn("Tipo");
+        productos.addColumn("Descripción");
+        productos.addColumn("Existencia");
+        productos.addColumn("Precio");
+        datosCategoria = (List<Categoria>)categoria.get("http://localhost:8000/api/categorias/");
+        tProductos.setModel(productos);
+        inicializarcbCategoria();
+        inicializarvarInventario();
+        inicializarEstructuraPut();
+        cargarInformacion();
+        lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
+        
+    }
+    
+    private void inicializarvarInventario()
+    {
+        variablesInventario.add("nombre");
+        variablesInventario.add("color");
+        variablesInventario.add("modelo");
+        variablesInventario.add("marca");
+        variablesInventario.add("tipo");
+        variablesInventario.add("descripcion");
+        variablesInventario.add("existencia");
+        variablesInventario.add("precio");
+        variablesInventario.add("categoriaId");
+    }
+    
+    private void inicializarEstructuraPut()
+    {
+        for (int i = 0; i < 9; i++)
+        {
+            EstructuraPostPut objeto = new EstructuraPostPut();
+            objeto.setVariable(variablesInventario.get(i));
+            estructuraPut.add(objeto);
+        }
+    }
+    
+    private void inicializarcbCategoria()
+    {
+        cbCategoria.addItem("Seleccionar...");
+        for (int i = 0; i < datosCategoria.size(); i++)
+            cbCategoria.addItem(datosCategoria.get(i).getCategoria());
     }
 
+    private void decidirCategoriaSeleccionada()
+    {
+        for (int i = 1; i < cbCategoria.getItemCount(); i++)
+        {
+            if (String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 1))
+                    .equals(String.valueOf(cbCategoria.getItemAt(i))))
+                cbCategoria.setSelectedIndex(i);
+        }
+    }
+    
+    private void seleccionarProducto()
+    {
+        try {
+            while (imagenes.size() > 0)
+                imagenes.remove(0);
+            codigoSeleccionado = String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 0));
+            filaSeleccionada = tProductos.getSelectedRow();
+            decidirCategoriaSeleccionada();
+            tfNombre.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 2)));
+            tfModelo.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 3)));
+            tfColor.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 4)));
+            tfMarca.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 5)));
+            tfTipo.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 6)));
+            tfDescripcion.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 7)));
+            tfExistencia.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 8)));
+            tfPrecio.setText(String.valueOf(tProductos.getValueAt(tProductos.getSelectedRow(), 9)));
+            objetoActual = listaProductos.get(filaSeleccionada);
+            if (objetoActual.getImagenes().size() > 0)
+            {
+                imagenActual = 1;
+                contImagenes = objetoActual.getImagenes().size();
+                URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                Image img = ImageIO.read(myURL.openStream());
+                ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                lblSelImg.setIcon(img2);
+            }
+            else
+            {
+                imagenActual = 0;
+                contImagenes = 0;
+                Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes" +
+                File.separator + "Fondo imagen.png").getImage();
+                ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                lblSelImg.setIcon(img2);
+            }
+            lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -81,8 +212,10 @@ public class FModInventario extends javax.swing.JPanel {
         btnAtras = new javax.swing.JButton();
         btnEliminarImagen = new javax.swing.JButton();
         lblColor1 = new javax.swing.JLabel();
-        btnAgregarImagen1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnAgregarImagen = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tProductos = new javax.swing.JTable();
+        btnEliminar = new javax.swing.JButton();
 
         pnlGeneral.setBackground(new java.awt.Color(34, 51, 59));
         pnlGeneral.setMinimumSize(new java.awt.Dimension(1280, 680));
@@ -258,15 +391,23 @@ public class FModInventario extends javax.swing.JPanel {
         pnlGeneral.add(tfPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 250, 200, -1));
         pnlGeneral.add(sepPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 270, 200, -1));
 
-        btnIngresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Ingresar.png"))); // NOI18N
+        btnIngresar.setBackground(new java.awt.Color(226, 98, 75));
+        btnIngresar.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        btnIngresar.setForeground(new java.awt.Color(255, 255, 255));
+        btnIngresar.setText("Modificar");
+        btnIngresar.setFocusPainted(false);
         btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIngresarActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 360, 310, 80));
+        pnlGeneral.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 360, 150, 50));
 
-        btnElegirImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Elegir imagen.png"))); // NOI18N
+        btnElegirImg.setBackground(new java.awt.Color(226, 98, 75));
+        btnElegirImg.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        btnElegirImg.setForeground(new java.awt.Color(255, 255, 255));
+        btnElegirImg.setText("Elegir imagen");
+        btnElegirImg.setFocusPainted(false);
         btnElegirImg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnElegirImgActionPerformed(evt);
@@ -338,32 +479,66 @@ public class FModInventario extends javax.swing.JPanel {
                 btnEliminarImagenActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnEliminarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 280, 40, 30));
+        pnlGeneral.add(btnEliminarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 280, 40, 30));
 
         lblColor1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         lblColor1.setForeground(new java.awt.Color(255, 255, 255));
         lblColor1.setText("Color *");
         pnlGeneral.add(lblColor1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 57, -1));
 
-        btnAgregarImagen1.setBackground(new java.awt.Color(226, 98, 75));
-        btnAgregarImagen1.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
-        btnAgregarImagen1.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregarImagen1.setText("+");
-        btnAgregarImagen1.setFocusPainted(false);
-        btnAgregarImagen1.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarImagen.setBackground(new java.awt.Color(226, 98, 75));
+        btnAgregarImagen.setFont(new java.awt.Font("Calibri", 0, 11)); // NOI18N
+        btnAgregarImagen.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarImagen.setText("+");
+        btnAgregarImagen.setFocusPainted(false);
+        btnAgregarImagen.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarImagen1ActionPerformed(evt);
+                btnAgregarImagenActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnAgregarImagen1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 280, 40, 30));
+        pnlGeneral.add(btnAgregarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 280, 40, 30));
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        tProductos = new javax.swing.JTable(){
+            public boolean isCellEditable(int rowIndex, int colIndex){
+                return false;
+            }
+        };
+        tProductos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nombre", "Apellido", "Dirección", "Usuario"
+            }
+        ));
+        tProductos.setFocusable(false);
+        tProductos.getTableHeader().setReorderingAllowed(false);
+        tProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tProductosMouseClicked(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tProductosMouseReleased(evt);
             }
         });
-        pnlGeneral.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 330, -1, -1));
+        jScrollPane1.setViewportView(tProductos);
+
+        pnlGeneral.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 470, 940, 170));
+
+        btnEliminar.setBackground(new java.awt.Color(226, 98, 75));
+        btnEliminar.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
+        btnEliminar.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminar.setText("Eliminar");
+        btnEliminar.setFocusPainted(false);
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
+        pnlGeneral.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1080, 520, 120, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -377,6 +552,31 @@ public class FModInventario extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cargarInformacion()
+    {
+        Object O[] = null;
+        
+        listaProductos = (List<Producto>)requestGet.get("http://localhost:8000/api/productos/");
+        List<Categoria> objeto = new ArrayList<>();
+        for (int i = 0; i < listaProductos.size(); i++)
+        {
+            objeto.add((Categoria)
+                    getCategoria.getUnaCategoria("http://localhost:8000/api/categorias/" + listaProductos.get(i).getCategoriaId() + "/"));
+            productos.addRow(O);
+            productos.setValueAt(listaProductos.get(i).getCodigo(), i, 0);
+            productos.setValueAt(objeto.get(0).getCategoria(), i, 1);
+            productos.setValueAt(listaProductos.get(i).getNombre(), i, 2);
+            productos.setValueAt(listaProductos.get(i).getModelo(), i, 3);
+            productos.setValueAt(listaProductos.get(i).getColor(), i, 4);
+            productos.setValueAt(listaProductos.get(i).getMarca(), i, 5);
+            productos.setValueAt(listaProductos.get(i).getTipo(), i, 6);
+            productos.setValueAt(listaProductos.get(i).getDescripcion(), i, 7);
+            productos.setValueAt(listaProductos.get(i).getExistencia(), i, 8);
+            productos.setValueAt(listaProductos.get(i).getPrecio(), i, 9);
+            objeto.remove(0);
+        }
+    }
+    
     private void tfNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfNombreKeyPressed
         if ((evt.getKeyCode() == KeyEvent.VK_DOWN) || (evt.getKeyCode() == KeyEvent.VK_ENTER))
         tfModelo.requestFocus();
@@ -549,11 +749,142 @@ public class FModInventario extends javax.swing.JPanel {
     }//GEN-LAST:event_tfPrecioKeyTyped
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-
+        if (filaSeleccionada != -1)
+        {
+            if (cbCategoria.getSelectedIndex() > 0 && tfNombre.getText().length() > 0 && tfModelo.getText().length() > 0
+                    && tfColor.getText().length() > 0 && tfMarca.getText().length() > 0 && tfTipo.getText().length() > 0
+                    && tfDescripcion.getText().length() > 0 && tfExistencia.getText().length() > 0
+                    && tfPrecio.getText().length() > 0) {
+                if (imagenesInsertadas()) {
+                    estructuraPut.get(0).setValor(tfNombre.getText());
+                    estructuraPut.get(1).setValor(tfColor.getText());
+                    estructuraPut.get(2).setValor(tfModelo.getText());
+                    estructuraPut.get(3).setValor(tfMarca.getText());
+                    estructuraPut.get(4).setValor(tfTipo.getText());
+                    estructuraPut.get(5).setValor(tfDescripcion.getText());
+                    estructuraPut.get(6).setValor(tfExistencia.getText());
+                    estructuraPut.get(7).setValor(tfPrecio.getText());
+                    estructuraPut.get(8).setValor(String.valueOf(
+                            datosCategoria.get(cbCategoria.getSelectedIndex() - 1).getId()));
+                    for (int i = 0; i < imagenes.size(); i++) {
+                        estructuraPut.add(imagenes.get(i));
+                    }
+                    requests.put("http://localhost:8000/api/productos/" + objetoActual.getCodigo() + "/", estructuraPut);
+                    tfNombre.setText("");
+                    tfColor.setText("");
+                    tfModelo.setText("");
+                    tfMarca.setText("");
+                    tfTipo.setText("");
+                    tfDescripcion.setText("");
+                    tfExistencia.setText("");
+                    tfPrecio.setText("");
+                    cbCategoria.setSelectedIndex(0);
+                    Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                            + File.separator + "Fondo imagen.png").getImage();
+                    ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                    lblSelImg.setIcon(img2);
+                    JOptionPane.showMessageDialog(null, "Producto modificado satisfactoriamente");
+                    reiniciarValores();
+                }
+                else
+                    JOptionPane.showMessageDialog(null, imagenesSinInsertar());
+            }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Por favor seleccione un producto");
     }//GEN-LAST:event_btnIngresarActionPerformed
 
+    private void reiniciarValores()
+    {
+        while (imagenes.size() > 0) {
+            imagenes.remove(0);
+        }
+        while (estructuraPut.size() > 9) {
+            estructuraPut.remove(9);
+        }
+        imagenActual = contImagenes = 0;
+        lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
+        while (productos.getRowCount() > 0) {
+            productos.removeRow(0);
+        }
+        cargarInformacion();
+        filaSeleccionada = -1;
+    }
+    private String imagenesSinInsertar()
+    {
+        List<Integer> posiciones = new ArrayList<>();
+        String resultado = "";
+        boolean encontrado = false;
+        for (int i = 0; i < imagenes.size(); i++)
+        {
+            if (imagenes.get(i).getValor().toString()
+                    .equals("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes" +
+                File.separator + "Fondo imagen.png")
+                    )
+            posiciones.add(objetoActual.getImagenes().size() + i+1);
+        }
+            
+        
+        if (posiciones.size() == 1)
+                resultado += "Hace falta insertar la imagen " + posiciones.get(0);
+        else
+        {
+            resultado += "Hace falta insertar las imágenes ";
+            while (posiciones.size() > 0)
+            {
+                if (posiciones.size() > 1)
+                    resultado += posiciones.get(0) + ", ";
+                else
+                    resultado += posiciones.get(0);
+                posiciones.remove(0);
+            }
+        }
+        return resultado;
+    }
+    
+    private boolean imagenesInsertadas()
+    {
+        for (int i = 0; i < imagenes.size(); i++)
+        {
+            if (imagenes.get(i).getValor().toString().equals("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes" +
+                File.separator + "Fondo imagen.png"))
+                return false;
+        }
+        return true;
+    }
+    
     private void btnElegirImgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnElegirImgActionPerformed
-
+        if (contImagenes > 0) {
+            if (imagenActual > objetoActual.getImagenes().size())
+            {
+                JFileChooser filechooser = new JFileChooser();
+                FileFilter filtradorArchivo = new FileNameExtensionFilter("Imágenes", new String[]{"jpg", "jpeg", "png"});
+                filechooser.setDialogTitle("Buscar imagen");
+                filechooser.setFileFilter(filtradorArchivo);
+                if (filechooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    File archivo = new File(filechooser.getSelectedFile().toString());
+                    if (FilenameUtils.getExtension(archivo.getAbsolutePath()).equals("jpg")
+                            || FilenameUtils.getExtension(archivo.getAbsolutePath()).equals("jpeg")
+                            || FilenameUtils.getExtension(archivo.getAbsolutePath()).equals("png")) {
+                        this.archivo = archivo;
+                        System.out.println(archivo.toString());
+                        Image img = new ImageIcon(archivo.toString()).getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                        FileBody imagen = new FileBody(archivo);
+                        if (imagen != null) {
+                            imagenes.get(imagenActual - (objetoActual.getImagenes().size()+1)).setValor(imagen);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Por favor ingrese una imagen");
+                    }
+                }
+            } 
+            else
+                JOptionPane.showMessageDialog(null, "Las imágenes cargadas del servidor no se pueden modificar");
+        } else
+            JOptionPane.showMessageDialog(null, "Todavía no se ha agregado ninguna imagen");
+            
     }//GEN-LAST:event_btnElegirImgActionPerformed
 
     private void cbCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbCategoriaItemStateChanged
@@ -573,61 +904,202 @@ public class FModInventario extends javax.swing.JPanel {
     }//GEN-LAST:event_cbCategoriaKeyReleased
 
     private void btnAdelanteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdelanteActionPerformed
+        if (imagenActual < contImagenes) {
+            try {
+                imagenActual++;
+                lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
+                if (imagenActual <= objetoActual.getImagenes().size())
+                {
+                    URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                    Image img = ImageIO.read(myURL.openStream());
+                    ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                    lblSelImg.setIcon(img2);
+                }
+                else
+                {
+                    if (!imagenes.get(imagenActual - (objetoActual.getImagenes().size()+1)).getValor().toString()
+                            .equals("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                                    + File.separator + "Fondo imagen.png")) {
+                        FileBody imagenObtenida = (FileBody) imagenes.get(imagenActual - (objetoActual.getImagenes().size()+1)).getValor();
+                        Image img = new ImageIcon(imagenObtenida.getFile().toString()).getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    } else {
+                        Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                                + File.separator + "Fondo imagen.png").getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    }
+                }
 
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btnAdelanteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
-
+        if (imagenActual > 1) {
+            try {
+                imagenActual--;
+                lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
+                if (imagenActual <= objetoActual.getImagenes().size()) {
+                    URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                    Image img = ImageIO.read(myURL.openStream());
+                    ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                    lblSelImg.setIcon(img2);
+                } else {
+                    if (!imagenes.get(imagenActual - (objetoActual.getImagenes().size() + 1)).getValor().toString()
+                            .equals("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                                    + File.separator + "Fondo imagen.png")) {
+                        FileBody imagenObtenida = (FileBody) imagenes.get(imagenActual - (objetoActual.getImagenes().size()+1)).getValor();
+                        Image img = new ImageIcon(imagenObtenida.getFile().toString()).getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    } else {
+                        Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                                + File.separator + "Fondo imagen.png").getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    }
+                }
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnEliminarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarImagenActionPerformed
-
+        if (filaSeleccionada != -1) {
+            if (imagenActual > objetoActual.getImagenes().size()) {
+                imagenes.remove(imagenActual - (objetoActual.getImagenes().size() + 1));
+            } else {
+                EstructuraPostPut objeto = new EstructuraPostPut();
+                objeto.setVariable("imagenes_borrar");
+                objeto.setValor(objetoActual.getImagenes().get(imagenActual - 1).getId());
+                estructuraPut.add(objeto);
+                objetoActual.getImagenes().remove(imagenActual - 1);
+            }
+            if (imagenActual > 1) {
+                imagenActual--;
+            }
+            if (contImagenes > 0) {
+                contImagenes--;
+            }
+            if (contImagenes == 0 && imagenActual == 1) {
+                imagenActual--;
+            }
+            if (contImagenes == 0) {
+                Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                        + File.separator + "Fondo imagen.png").getImage();
+                ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                lblSelImg.setIcon(img2);
+            }
+            lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
+            if (imagenActual > 0) {
+                if (imagenActual <= objetoActual.getImagenes().size()) {
+                    try {
+                        URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                        Image img = ImageIO.read(myURL.openStream());
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    if (!imagenes.get(imagenActual - (objetoActual.getImagenes().size() + 1)).getValor().toString()
+                            .equals("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                                    + File.separator + "Fondo imagen.png")) {
+                        FileBody imagenObtenida = (FileBody) imagenes.get(imagenActual - (objetoActual.getImagenes()
+                                .size() + 1)).getValor();
+                        Image img = new ImageIcon(imagenObtenida.getFile().toString()).getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    } else {
+                        Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                                + File.separator + "Fondo imagen.png").getImage();
+                        ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
+                        lblSelImg.setIcon(img2);
+                    }
+                }
+            }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Por favor seleccione un producto");
     }//GEN-LAST:event_btnEliminarImagenActionPerformed
 
-    private void btnAgregarImagen1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarImagen1ActionPerformed
-
-    }//GEN-LAST:event_btnAgregarImagen1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            //URL myURL = new URL("http://localhost:8000/media/Blogger2.png");
-            //Primera forma, sólo quería ver qué me retornaba, pero me tira un http notificándome que no encuentra el archivo
-            /*HttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet("localhost:8000/media/Blogger2.png");
-            HttpResponse response = httpClient.execute(httpGet);
-            HttpEntity resEntity = response.getEntity();
-            System.out.println(EntityUtils.toString(resEntity));
-            System.out.println(resEntity.toString());*/
-            //Segunda forma, truena el programa, tira un error de FileNotFoundException
-            URL myURL = new URL("localhost:8000/media/Blogger2.png");
-            Image img = ImageIO.read(myURL.openStream());
-
-            //Image img = new ImageIcon(myURL).getImage();
+    private void btnAgregarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarImagenActionPerformed
+        if (filaSeleccionada != -1)
+        {
+            Image img = new ImageIcon("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                    + File.separator + "Fondo imagen.png").getImage();
             ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
             lblSelImg.setIcon(img2);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(FModInventario.class.getName()).log(Level.SEVERE, null, ex);
+            EstructuraPostPut estructuraPost = new EstructuraPostPut();
+            estructuraPost.setVariable("imagenes");
+            estructuraPost.setValor("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes"
+                    + File.separator + "Fondo imagen.png");
+            imagenes.add(estructuraPost);
+            contImagenes++;
+            imagenActual = contImagenes;
+            lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
         }
-
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void voidPrueba(URL prueba)
-    {
+        else
+            JOptionPane.showMessageDialog(null, "Por favor seleccione un producto");
         
+    }//GEN-LAST:event_btnAgregarImagenActionPerformed
+
+    private void tProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tProductosMouseClicked
+
+    }//GEN-LAST:event_tProductosMouseClicked
+
+    private void tProductosMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tProductosMouseReleased
+        if (evt.getButton() == 1)
+            seleccionarProducto();
+    }//GEN-LAST:event_tProductosMouseReleased
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        if (filaSeleccionada != -1)
+        {
+            int input = JOptionPane.showConfirmDialog(null, "¿Eliminar producto?","Eliminar",JOptionPane.OK_CANCEL_OPTION);
+            if (input == 0)
+            {
+                requests.delete("http://localhost:8000/api/productos/" + objetoActual.getCodigo() + "/");
+                JOptionPane.showMessageDialog(null, "Producto eliminado satisfactoriamente");
+                reiniciarValores();
+            }
+        }
+        else
+            JOptionPane.showMessageDialog(null, "Por favor seleccione un producto");
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    
+    
+    private void limpiarTProductos()
+    {
+        while (productos.getRowCount() > 0)
+            productos.removeRow(0);
     }
+    
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdelante;
-    private javax.swing.JButton btnAgregarImagen1;
+    private javax.swing.JButton btnAgregarImagen;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnElegirImg;
+    private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnEliminarImagen;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JComboBox<String> cbCategoria;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblColor1;
     private javax.swing.JLabel lblDescripcion;
@@ -649,6 +1121,7 @@ public class FModInventario extends javax.swing.JPanel {
     private javax.swing.JSeparator sepNombre;
     private javax.swing.JSeparator sepPrecio;
     private javax.swing.JSeparator sepTipo;
+    private javax.swing.JTable tProductos;
     private javax.swing.JTextField tfColor;
     private javax.swing.JTextField tfDescripcion;
     private javax.swing.JTextField tfExistencia;

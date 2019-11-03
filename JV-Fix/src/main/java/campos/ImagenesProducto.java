@@ -3,16 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces;
-
-import java.util.List;
-import requests.EstructuraPostPut;
+package campos;
 
 /**
  *
  * @author Windows 8.1
  */
-public interface IRequests {
-    public Object get(String http);
-    public List<Object> filtrar(List<Object> lista, String info);
+public class ImagenesProducto {
+    int id;
+    String imagen;
+    
+    public int getId()
+    {
+        return id;
+    }
+    
+    public String getImagen()
+    {
+        return imagen;
+    }
 }

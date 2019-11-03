@@ -11,8 +11,8 @@ import java.util.List;
  *
  * @author Windows 8.1
  */
-public class EstructuraPost {
-    public EstructuraPost(){
+public class EstructuraPostPut {
+    public EstructuraPostPut(){
         
     }
     private String variable;

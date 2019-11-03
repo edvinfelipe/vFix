@@ -32,7 +32,7 @@ import org.apache.http.util.EntityUtils;
 public class Requests {
     public Requests(){}
     
-    public String post(String http, List<EstructuraPost> estructura){
+    public String post(String http, List<EstructuraPostPut> estructura){
         try {
             String resultado;
             HttpClient httpClient = new DefaultHttpClient();
@@ -74,15 +74,25 @@ public class Requests {
         }
     }
     
-    public void put(String http, List<EstructuraPost> estructura)
+    public void put(String http, List<EstructuraPostPut> estructura)
     {
         try {
+            String resultado;
             HttpClient httpClient = new DefaultHttpClient();
             HttpPut httpPut = new HttpPut(http);
             MultipartEntity reqEntity = new MultipartEntity();
-            reqEntity.addPart(estructura.get(0).getVariable(), new StringBody(estructura.get(0).getValor().toString()));
+            for (int i = 0; i < estructura.size(); i++)
+            {
+                if (!estructura.get(i).getVariable().equals("imagenes"))
+                    reqEntity.addPart(estructura.get(i).getVariable(), new StringBody(estructura.get(i).getValor().toString()));
+                else
+                    reqEntity.addPart(estructura.get(i).getVariable(), (FileBody)estructura.get(i).getValor());
+            }
             httpPut.setEntity(reqEntity);
             HttpResponse response = httpClient.execute(httpPut);
+            HttpEntity resEntity = response.getEntity();
+            resultado = EntityUtils.toString(resEntity);
+            System.out.println( resultado );
             httpClient.getConnectionManager().shutdown();
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(Requests.class.getName()).log(Level.SEVERE, null, ex);

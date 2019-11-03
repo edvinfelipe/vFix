@@ -5,7 +5,7 @@
  */
 package formularios;
 
-import requests.EstructuraPost;
+import requests.EstructuraPostPut;
 import requests.Requests;
 import java.awt.Image;
 import java.io.File;
@@ -31,15 +31,14 @@ import org.apache.http.entity.mime.content.FileBody;
 public class FInventario extends javax.swing.JPanel {
     File archivo;
     Requests requests = new Requests();
-    List<EstructuraPost> postCategoria = new ArrayList<>();
-    List<EstructuraPost> postInventario = new ArrayList<>();
+    List<EstructuraPostPut> postCategoria = new ArrayList<>();
+    List<EstructuraPostPut> postInventario = new ArrayList<>();
     List<Categoria> datosCategoria = new ArrayList<>();
     GetCategoria categoria = new GetCategoria();
     List<String> variablesInventario = new ArrayList<>();
-    List<EstructuraPost> imagenes = new ArrayList<>();
+    List<EstructuraPostPut> imagenes = new ArrayList<>();
     int contImagenes = 0;
     int imagenActual = 0;
-    //List<FileBody> imagenes = new ArrayList<>();
     /**
      * Creates new form FInventario
      */
@@ -75,7 +74,7 @@ public class FInventario extends javax.swing.JPanel {
     }
     private void inicializarEstructuraCategoria()
     {
-        EstructuraPost estructuraPost = new EstructuraPost();
+        EstructuraPostPut estructuraPost = new EstructuraPostPut();
         estructuraPost.setVariable("nombre");
         postCategoria.add(estructuraPost);
     }
@@ -84,7 +83,7 @@ public class FInventario extends javax.swing.JPanel {
     {
         for (int i = 0; i < 10; i++)
         {
-            EstructuraPost estructuraPost = new EstructuraPost();
+            EstructuraPostPut estructuraPost = new EstructuraPostPut();
             estructuraPost.setVariable(variablesInventario.get(i));
             postInventario.add(estructuraPost);
         } 
@@ -141,7 +140,7 @@ public class FInventario extends javax.swing.JPanel {
         btnEliminarImagen = new javax.swing.JButton();
         lblColor1 = new javax.swing.JLabel();
         btnAgregarImagen1 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnModInventario = new javax.swing.JButton();
 
         pnlGeneral.setBackground(new java.awt.Color(34, 51, 59));
         pnlGeneral.setMinimumSize(new java.awt.Dimension(1280, 680));
@@ -337,7 +336,11 @@ public class FInventario extends javax.swing.JPanel {
         pnlGeneral.add(tfPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 420, 200, -1));
         pnlGeneral.add(sepPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 440, 200, -1));
 
-        btnIngresar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Ingresar.png"))); // NOI18N
+        btnIngresar.setBackground(new java.awt.Color(226, 98, 75));
+        btnIngresar.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
+        btnIngresar.setForeground(new java.awt.Color(255, 255, 255));
+        btnIngresar.setText("Ingresar");
+        btnIngresar.setFocusPainted(false);
         btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnIngresarActionPerformed(evt);
@@ -345,7 +348,11 @@ public class FInventario extends javax.swing.JPanel {
         });
         pnlGeneral.add(btnIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 510, 310, 80));
 
-        btnElegirImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Elegir imagen.png"))); // NOI18N
+        btnElegirImg.setBackground(new java.awt.Color(226, 98, 75));
+        btnElegirImg.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        btnElegirImg.setForeground(new java.awt.Color(255, 255, 255));
+        btnElegirImg.setText("Elegir imagen");
+        btnElegirImg.setFocusPainted(false);
         btnElegirImg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnElegirImgActionPerformed(evt);
@@ -384,29 +391,41 @@ public class FInventario extends javax.swing.JPanel {
         });
         pnlGeneral.add(cbCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 90, 200, 30));
 
-        btnEliCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Eliminar categoría.png"))); // NOI18N
+        btnEliCategoria.setBackground(new java.awt.Color(226, 98, 75));
+        btnEliCategoria.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
+        btnEliCategoria.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliCategoria.setText("Eliminar");
+        btnEliCategoria.setFocusPainted(false);
         btnEliCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliCategoriaActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnEliCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 130, 80, 20));
+        pnlGeneral.add(btnEliCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 130, 100, 20));
 
-        btnModCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Modificar categoría.png"))); // NOI18N
+        btnModCategoria.setBackground(new java.awt.Color(226, 98, 75));
+        btnModCategoria.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
+        btnModCategoria.setForeground(new java.awt.Color(255, 255, 255));
+        btnModCategoria.setText("Modificar");
+        btnModCategoria.setFocusPainted(false);
         btnModCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnModCategoriaActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnModCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 130, 80, 20));
+        pnlGeneral.add(btnModCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 130, -1, 20));
 
-        btnAgrCategoria.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Agregar.png"))); // NOI18N
+        btnAgrCategoria.setBackground(new java.awt.Color(226, 98, 75));
+        btnAgrCategoria.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
+        btnAgrCategoria.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgrCategoria.setText("Agregar");
+        btnAgrCategoria.setFocusPainted(false);
         btnAgrCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgrCategoriaActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnAgrCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 80, 20));
+        pnlGeneral.add(btnAgrCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, 90, 20));
 
         btnAdelante.setBackground(new java.awt.Color(226, 98, 75));
         btnAdelante.setForeground(new java.awt.Color(255, 255, 255));
@@ -441,7 +460,7 @@ public class FInventario extends javax.swing.JPanel {
                 btnEliminarImagenActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnEliminarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 330, 40, 30));
+        pnlGeneral.add(btnEliminarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 320, 40, 30));
 
         lblColor1.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         lblColor1.setForeground(new java.awt.Color(255, 255, 255));
@@ -458,15 +477,18 @@ public class FInventario extends javax.swing.JPanel {
                 btnAgregarImagen1ActionPerformed(evt);
             }
         });
-        pnlGeneral.add(btnAgregarImagen1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 330, 40, 30));
+        pnlGeneral.add(btnAgregarImagen1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 320, 40, 30));
 
-        jButton1.setText("Inventario disponible");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnModInventario.setBackground(new java.awt.Color(226, 98, 75));
+        btnModInventario.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
+        btnModInventario.setForeground(new java.awt.Color(255, 255, 255));
+        btnModInventario.setText("Inventario disponible");
+        btnModInventario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnModInventarioActionPerformed(evt);
             }
         });
-        pnlGeneral.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1130, 30, -1, -1));
+        pnlGeneral.add(btnModInventario, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 20, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -863,7 +885,6 @@ public class FInventario extends javax.swing.JPanel {
                 lblSelImg.setIcon(img2);
             }
         }
-        
     }//GEN-LAST:event_btnEliminarImagenActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
@@ -923,7 +944,7 @@ public class FInventario extends javax.swing.JPanel {
                 File.separator + "Fondo imagen.png").getImage();
         ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
         lblSelImg.setIcon(img2);
-        EstructuraPost estructuraPost = new EstructuraPost();
+        EstructuraPostPut estructuraPost = new EstructuraPostPut();
         estructuraPost.setVariable("imagenes");
         estructuraPost.setValor("src" + File.separator + "main" + File.separator + "resources" + File.separator + "imagenes" +
                 File.separator + "Fondo imagen.png");
@@ -996,7 +1017,7 @@ public class FInventario extends javax.swing.JPanel {
             tfExistencia.requestFocus();
     }//GEN-LAST:event_tfPrecioKeyPressed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnModInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModInventarioActionPerformed
         FModInventario inventario = new FModInventario();
         inventario.setSize(1280,680);
         inventario.setLocation(0, 0);
@@ -1004,7 +1025,7 @@ public class FInventario extends javax.swing.JPanel {
         this.add(inventario,BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnModInventarioActionPerformed
 
     String toBinary(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);
@@ -1025,8 +1046,8 @@ public class FInventario extends javax.swing.JPanel {
     private javax.swing.JButton btnEliminarImagen;
     private javax.swing.JButton btnIngresar;
     private javax.swing.JButton btnModCategoria;
+    private javax.swing.JButton btnModInventario;
     private javax.swing.JComboBox<String> cbCategoria;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel lblCategoria;
     private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblColor1;

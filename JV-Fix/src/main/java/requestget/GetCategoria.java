@@ -33,12 +33,13 @@ public class GetCategoria implements IRequests{
             HttpResponse response = httpClient.execute(httpGet);
             HttpEntity resEntity = response.getEntity();
             String resultado = EntityUtils.toString(resEntity);
-            //System.out.println(resultado);
+            System.out.println(resultado);
             if (resultado.length() > 2)
             {
                 int cont = 0;
                 int index = 0;
                 do {
+                    //Para obtener el id de la categoria
                     cont += 7;
                     String resul = "";
                     while (resultado.charAt(cont) != ',') {
@@ -48,6 +49,7 @@ public class GetCategoria implements IRequests{
                     campos.Categoria objeto = new campos.Categoria();
                     objeto.setId(Integer.parseInt(resul));
                     //Todo lo anterior es codigo que nunca va a variar
+                    //Para obtener el nombre de la categoria
                     cont += 11;
                     resul = "";
                     while (resultado.charAt(cont) != '}') {
@@ -70,5 +72,54 @@ public class GetCategoria implements IRequests{
             Logger.getLogger(GetCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
         return valores;
+    }
+    
+    public Object getUnaCategoria(String http)
+    {
+        try {
+            campos.Categoria objeto = new campos.Categoria();
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(http);
+            HttpResponse response = httpClient.execute(httpGet);
+            HttpEntity resEntity = response.getEntity();
+            String resultado = EntityUtils.toString(resEntity);
+            System.out.println(resultado);
+            if (resultado.length() > 2)
+            {
+                int cont = 0;
+                int index = 0;
+                    //Para obtener el id de la categoria
+                cont += 6;
+                String resul = "";
+                while (resultado.charAt(cont) != ',') {
+                    resul += resultado.charAt(cont);
+                    cont++;
+                }
+                objeto.setId(Integer.parseInt(resul));
+                //Todo lo anterior es codigo que nunca va a variar
+                //Para obtener el nombre de la categoria
+                cont += 11;
+                resul = "";
+                while (resultado.charAt(cont) != '}') {
+                    if (resultado.charAt(cont) != '\"') {
+                        resul += resultado.charAt(cont);
+                    }
+                    cont++;
+                }
+                objeto.setCategoria(resul);
+                cont++;
+                //Aqui seria un do-while de si el caracter encontrado no es una coma
+                index++;
+            }
+            return objeto;
+        } catch (IOException ex) {
+            Logger.getLogger(GetCategoria.class.getName()).log(Level.SEVERE, null, ex);
+            return "Error";
+        }
+    }
+
+    @Override
+    public List<Object> filtrar(List<Object> lista, String info) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
