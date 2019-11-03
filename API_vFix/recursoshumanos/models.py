@@ -9,8 +9,8 @@ class RH(models.Model):
     eliminado   = models.BooleanField(default=False)
 
     #Usuario y contrasenio 
-    usuario     = models.CharField(max_length=45)
-    contrasenia = models.CharField(max_length=30)
+    usuario     = models.CharField(max_length=45,default='')
+    contrasenia = models.CharField(max_length=30,default='')
 
     def deleted(self):
         self.eliminado=True

@@ -18,11 +18,7 @@ class Migration(migrations.Migration):
                 ('codigo', models.CharField(max_length=40)),
                 ('nombre', models.CharField(max_length=55)),
                 ('telefono', models.CharField(max_length=16)),
-<<<<<<< HEAD
-                ('nit', models.CharField(default='', max_length=20)),
-=======
                 ('nit', models.CharField(default='c/f', max_length=20)),
->>>>>>> develop
                 ('direccion', models.CharField(default='ciudad', max_length=30)),
                 ('cumpleanios', models.DateField()),
                 ('estrellas', models.IntegerField()),
