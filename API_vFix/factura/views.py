@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from .serializers import FacturaSerializers, FacturaMovilSerializers
 from .models import Factura
 from django.db.models import Sum
+from rest_framework import permissions
 import datetime
 
 # Create your views here.
@@ -45,6 +46,8 @@ class FacturaDetalle(APIView):
         return Response({'mensaje':'La factura se canceló con éxito'})
 
 class FacturaMovil(APIView):
+    
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, year):
 
         try:
@@ -67,7 +70,11 @@ class FacturaMovil(APIView):
                     end_date = datetime.date(year, month+1, 31)
 
                 suma = Factura.objects.filter(fecha__range=(start_date, end_date)).aggregate(Sum('total'))
-                json['mes'+str(month+1)] = suma.get('total__sum')
+
+                if  suma.get('total__sum') is None:
+                    json['mes'+str(month+1)] = 0
+                else:
+                    json['mes'+str(month+1)] = suma.get('total__sum')
                           
             return Response(json)
         except:

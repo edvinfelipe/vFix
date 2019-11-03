@@ -14,4 +14,4 @@ class ClienteSerializersModificacion( serializers.ModelSerializer ):
 class ClienteFiltradoSerializers(serializers.ModelSerializer):
     class Meta:
         model = Cliente 
-        fields = ['codigo','nombre','nit','direccion']
+        fields = ['id','codigo','nombre','nit','direccion']

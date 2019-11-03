@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .models import Producto, Imagenes
 from .serializers import ProductoSerializers, ProductoSerializerModificacion, FiltrarProductoSerializers, FiltrarProductoNomCodSerializers
 from categoria.models import Categoria
+from rest_framework import permissions
 
 # Create your views here.
 def convertir_datos_json(data):
@@ -144,6 +145,7 @@ class FiltrarProducto(APIView):
 # Obtener los productos de una categoria móvil
 class FiltrarProductoCategoria(APIView):
 
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request, categoriaId):
         
         if Categoria.objects.filter(pk=categoriaId).exists():
