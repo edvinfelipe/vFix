@@ -15,7 +15,9 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Principal f = new Principal();
+        //Principal f = new Principal();
+        //f.setVisible(true);
+        FRRHH f = new FRRHH();
         f.setVisible(true);
         // TODO code application logic here
     }

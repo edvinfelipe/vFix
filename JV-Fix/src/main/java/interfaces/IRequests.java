@@ -14,5 +14,5 @@ import requests.EstructuraPostPut;
  */
 public interface IRequests {
     public Object get(String http);
-    public List<Object> filtrar(List<Object> lista, String info);
+    public Object filtrar(String http);
 }

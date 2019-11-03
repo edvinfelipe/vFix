@@ -145,7 +145,7 @@ public class GetClientes implements IRequests{
     }
 
     @Override
-    public List<Object> filtrar(List<Object> lista, String info) {
-        return null;
+    public Object filtrar(String http) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
