@@ -66,9 +66,7 @@ public class FRRHH extends javax.swing.JPanel {
         sepNombre = new javax.swing.JSeparator();
         txtUsuario = new javax.swing.JTextField();
         sepUsuario = new javax.swing.JSeparator();
-        txtContrasena = new javax.swing.JTextField();
         sepContrasena = new javax.swing.JSeparator();
-        txtConfirmarContrasena = new javax.swing.JTextField();
         txtCodigo = new javax.swing.JTextField();
         lblCodigo = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -82,11 +80,12 @@ public class FRRHH extends javax.swing.JPanel {
         botonFotografia = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         rbEmpleado = new javax.swing.JRadioButton();
-        rbSAdministrador = new javax.swing.JRadioButton();
         rbAdministrador = new javax.swing.JRadioButton();
         jPanel5 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         botonModificar = new javax.swing.JButton();
+        txtContrasenia = new javax.swing.JPasswordField();
+        txtConfirmarContrasenia = new javax.swing.JPasswordField();
 
         pnlGeneral.setBackground(new java.awt.Color(52, 73, 85));
         pnlGeneral.setPreferredSize(new java.awt.Dimension(1280, 680));
@@ -127,19 +126,7 @@ public class FRRHH extends javax.swing.JPanel {
         txtUsuario.setBorder(null);
         pnlGeneral.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 200, 200, 30));
         pnlGeneral.add(sepUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 230, 200, 10));
-
-        txtContrasena.setBackground(new java.awt.Color(52, 73, 85));
-        txtContrasena.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        txtContrasena.setForeground(new java.awt.Color(255, 255, 255));
-        txtContrasena.setBorder(null);
-        pnlGeneral.add(txtContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 260, 200, 30));
         pnlGeneral.add(sepContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 290, 200, 10));
-
-        txtConfirmarContrasena.setBackground(new java.awt.Color(52, 73, 85));
-        txtConfirmarContrasena.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
-        txtConfirmarContrasena.setForeground(new java.awt.Color(255, 255, 255));
-        txtConfirmarContrasena.setBorder(null);
-        pnlGeneral.add(txtConfirmarContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 320, 200, 30));
 
         txtCodigo.setBackground(new java.awt.Color(52, 73, 85));
         txtCodigo.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -192,13 +179,17 @@ public class FRRHH extends javax.swing.JPanel {
         lblElegirFtg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/Fondo imagen.png"))); // NOI18N
         jPanel3.add(lblElegirFtg, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 40, 250, 200));
 
-        botonFotografia.setText("jButton2");
+        botonFotografia.setBackground(new java.awt.Color(249, 170, 51));
+        botonFotografia.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        botonFotografia.setForeground(new java.awt.Color(255, 255, 255));
+        botonFotografia.setText("Elegir Fotografia");
+        botonFotografia.setBorder(null);
         botonFotografia.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonFotografiaActionPerformed(evt);
             }
         });
-        jPanel3.add(botonFotografia, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 250, -1, -1));
+        jPanel3.add(botonFotografia, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 250, 150, 25));
 
         pnlGeneral.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 70, 350, 290));
 
@@ -215,18 +206,7 @@ public class FRRHH extends javax.swing.JPanel {
                 rbEmpleadoActionPerformed(evt);
             }
         });
-        jPanel2.add(rbEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 150, -1, -1));
-
-        rbSAdministrador.setBackground(new java.awt.Color(52, 73, 85));
-        rbSAdministrador.setFont(new java.awt.Font("Calibri", 0, 20)); // NOI18N
-        rbSAdministrador.setForeground(new java.awt.Color(255, 255, 255));
-        rbSAdministrador.setText("SubAdministrador");
-        rbSAdministrador.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbSAdministradorActionPerformed(evt);
-            }
-        });
-        jPanel2.add(rbSAdministrador, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 100, -1, 40));
+        jPanel2.add(rbEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
 
         rbAdministrador.setBackground(new java.awt.Color(52, 73, 85));
         rbAdministrador.setFont(new java.awt.Font("Calibri", 0, 20)); // NOI18N
@@ -245,23 +225,43 @@ public class FRRHH extends javax.swing.JPanel {
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Opciones", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("jButton1");
+        jButton1.setBackground(new java.awt.Color(249, 170, 51));
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Insertar Empleado");
+        jButton1.setBorder(null);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
+        jPanel5.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 178, 25));
 
-        botonModificar.setText("jButton2");
+        botonModificar.setBackground(new java.awt.Color(204, 153, 0));
+        botonModificar.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
+        botonModificar.setForeground(new java.awt.Color(255, 255, 255));
+        botonModificar.setText("Modificar Empleado");
+        botonModificar.setBorder(null);
         botonModificar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonModificarActionPerformed(evt);
             }
         });
-        jPanel5.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, -1, -1));
+        jPanel5.add(botonModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 180, 25));
 
-        pnlGeneral.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 170, 190));
+        pnlGeneral.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 200, 140));
+
+        txtContrasenia.setBackground(new java.awt.Color(52, 73, 85));
+        txtContrasenia.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtContrasenia.setForeground(new java.awt.Color(255, 255, 255));
+        txtContrasenia.setBorder(null);
+        pnlGeneral.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 260, 200, 30));
+
+        txtConfirmarContrasenia.setBackground(new java.awt.Color(52, 73, 85));
+        txtConfirmarContrasenia.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtConfirmarContrasenia.setForeground(new java.awt.Color(255, 255, 255));
+        txtConfirmarContrasenia.setBorder(null);
+        pnlGeneral.add(txtConfirmarContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 320, 200, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -283,10 +283,6 @@ public class FRRHH extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_rbAdministradorActionPerformed
 
-    private void rbSAdministradorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbSAdministradorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbSAdministradorActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         
@@ -294,7 +290,7 @@ public class FRRHH extends javax.swing.JPanel {
            List<Empleado> empleado= null;
            Empleados empleados = new Empleados("http://icris17.pythonanywhere.com/api/recursoshumanos/");
            empleados.insertarEmpleado(txtCodigo.getText(),txtNombre.getText(),validarRol(),txtUsuario.getText(),
-                   txtContrasena.getText(),fotografia);
+                   txtContrasenia.getText(),fotografia);
            empleado = empleados.mostrarEmpleados();
            if(empleado!=null){
                 tablaEmpleados.setDefaultRenderer(Object.class, new FotografiaEmpleado());
@@ -315,14 +311,14 @@ public class FRRHH extends javax.swing.JPanel {
             File ruta = jFileChooser.getSelectedFile();
             String rutaFoto = jFileChooser.getSelectedFile().getPath();
             String r = ruta.getPath();
-            fotografia = new File(rutaFoto);
-            System.out.println("rutaFoto "+ r);
-            System.out.println("rutaFoto2 "+ getClass().getResource(r));
-            //Image imagen = new ImageIcon(getClass().getResource(r)).getImage();
+            if(!r.equals("")){
+                fotografia = new File(rutaFoto);
+                Image imagen = new ImageIcon(r).getImage();
+                Image newimg = imagen.getScaledInstance(lblElegirFtg.getWidth(),lblElegirFtg.getHeight(),java.awt.Image.SCALE_SMOOTH);
+                ImageIcon imageIcon = new ImageIcon(newimg); 
+                lblElegirFtg.setIcon(imageIcon);
+            }
             
-            //Image newimg = imagen.getScaledInstance(lblElegirFtg.getWidth(),lblElegirFtg.getHeight(),java.awt.Image.SCALE_SMOOTH);
-            ImageIcon imageIcon = new ImageIcon(r); 
-            lblElegirFtg.setIcon(imageIcon);
         }
         
     }//GEN-LAST:event_botonFotografiaActionPerformed
@@ -336,6 +332,7 @@ public class FRRHH extends javax.swing.JPanel {
             Empleados empleados = new Empleados("http://icris17.pythonanywhere.com/api/recursoshumanos/"+txtCodigo.getText()+"/");
             empleados.modificarEmpleado(txtNombre.getText(),validarRol(),fotografia);
             empleado = empleados.mostrarEmpleados();
+            limpiarDatos();
            if(empleado!=null){
                 AdaptadorEmpleados adaptadorEmpleados = new AdaptadorEmpleados(empleado);
                 tablaEmpleados.setModel(adaptadorEmpleados.obtenerModelo());
@@ -371,7 +368,7 @@ public class FRRHH extends javax.swing.JPanel {
     private boolean validarInsercion(){
         
         return !txtCodigo.getText().equals("")&&!txtNombre.getText().equals("")&&!txtUsuario.getText().equals("")&&
-                !txtContrasena.getText().equals("")&&!txtConfirmarContrasena.getText().equals("");
+                !txtContrasenia.getText().equals("")&&!txtConfirmarContrasenia.getText().equals("");
     }
     
     private boolean validarModificacion(){
@@ -439,7 +436,6 @@ public class FRRHH extends javax.swing.JPanel {
     private javax.swing.JPanel pnlGeneral;
     private javax.swing.JRadioButton rbAdministrador;
     private javax.swing.JRadioButton rbEmpleado;
-    private javax.swing.JRadioButton rbSAdministrador;
     private javax.swing.JSeparator sepCContrasena;
     private javax.swing.JSeparator sepCodigo;
     private javax.swing.JSeparator sepContrasena;
@@ -447,8 +443,8 @@ public class FRRHH extends javax.swing.JPanel {
     private javax.swing.JSeparator sepUsuario;
     private javax.swing.JTable tablaEmpleados;
     private javax.swing.JTextField txtCodigo;
-    private javax.swing.JTextField txtConfirmarContrasena;
-    private javax.swing.JTextField txtContrasena;
+    private javax.swing.JPasswordField txtConfirmarContrasenia;
+    private javax.swing.JPasswordField txtContrasenia;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
