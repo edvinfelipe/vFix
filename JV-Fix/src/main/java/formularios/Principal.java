@@ -28,6 +28,7 @@ public class Principal extends javax.swing.JFrame {
         ajustarImagen("src/main/resources/imagenes/RRHH.png", btnInventario);
         ajustarImagen("src/main/resources/imagenes/Imgventas.png", btnRRHH);
         ajustarImagen("src/main/resources/imagenes/Inventario.png", btnVentas);
+        ajustarImagen("src/main/resources/imagenes/Clientes.png", btnClientes);
     }
     
     void ajustarImagen(String ruta, JButton boton)
@@ -52,6 +53,7 @@ public class Principal extends javax.swing.JFrame {
         btnInventario = new javax.swing.JButton();
         btnRRHH = new javax.swing.JButton();
         btnVentas = new javax.swing.JButton();
+        btnClientes = new javax.swing.JButton();
         pnlIndicador = new javax.swing.JPanel();
         btnMinimizar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
@@ -93,6 +95,14 @@ public class Principal extends javax.swing.JFrame {
             }
         });
         pnlBotones.add(btnVentas, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 300, 50, 50));
+
+        btnClientes.setContentAreaFilled(false);
+        btnClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientesActionPerformed(evt);
+            }
+        });
+        pnlBotones.add(btnClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 420, 50, 50));
 
         pnlPrincipal.add(pnlBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -253,6 +263,17 @@ public class Principal extends javax.swing.JFrame {
         lblModulo.setText("Recursos Humanos");
     }//GEN-LAST:event_btnRRHHActionPerformed
 
+    private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
+        FClientes clientes= new FClientes();
+        clientes.setSize(1280,680);
+        clientes.setLocation(0, 0);
+        contenedor.removeAll();
+        contenedor.add(clientes,BorderLayout.CENTER);
+        contenedor.revalidate();
+        contenedor.repaint();
+        lblModulo.setText("Clientes");
+    }//GEN-LAST:event_btnClientesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -289,6 +310,7 @@ public class Principal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnInventario;
     private javax.swing.JButton btnMinimizar;
     private javax.swing.JButton btnRRHH;

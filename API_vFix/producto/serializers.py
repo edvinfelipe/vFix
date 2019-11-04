@@ -52,3 +52,8 @@ class FiltrarProductoSerializers(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = ['codigo','nombre','existencia','imagenes']
+
+class FiltrarProductoNomCodSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['codigo','nombre','existencia','precio']
