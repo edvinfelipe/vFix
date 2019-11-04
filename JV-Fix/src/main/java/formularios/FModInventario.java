@@ -76,7 +76,7 @@ public class FModInventario extends javax.swing.JPanel {
         productos.addColumn("Descripción");
         productos.addColumn("Existencia");
         productos.addColumn("Precio");
-        datosCategoria = (List<Categoria>)categoria.get("http://localhost:8000/api/categorias/");
+        datosCategoria = (List<Categoria>)categoria.get("http://icris17.pythonanywhere.com/api/categorias/");
         tProductos.setModel(productos);
         inicializarcbCategoria();
         inicializarvarInventario();
@@ -147,7 +147,7 @@ public class FModInventario extends javax.swing.JPanel {
             {
                 imagenActual = 1;
                 contImagenes = objetoActual.getImagenes().size();
-                URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                URL myURL = new URL("http://icris17.pythonanywhere.com" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
                 Image img = ImageIO.read(myURL.openStream());
                 ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
                 lblSelImg.setIcon(img2);
@@ -556,12 +556,12 @@ public class FModInventario extends javax.swing.JPanel {
     {
         Object O[] = null;
         
-        listaProductos = (List<Producto>)requestGet.get("http://localhost:8000/api/productos/");
+        listaProductos = (List<Producto>)requestGet.get("http://icris17.pythonanywhere.com/api/productos/");
         List<Categoria> objeto = new ArrayList<>();
         for (int i = 0; i < listaProductos.size(); i++)
         {
             objeto.add((Categoria)
-                    getCategoria.getUnaCategoria("http://localhost:8000/api/categorias/" + listaProductos.get(i).getCategoriaId() + "/"));
+                    getCategoria.getUnaCategoria("http://icris17.pythonanywhere.com/api/categorias/" + listaProductos.get(i).getCategoriaId() + "/"));
             productos.addRow(O);
             productos.setValueAt(listaProductos.get(i).getCodigo(), i, 0);
             productos.setValueAt(objeto.get(0).getCategoria(), i, 1);
@@ -769,7 +769,7 @@ public class FModInventario extends javax.swing.JPanel {
                     for (int i = 0; i < imagenes.size(); i++) {
                         estructuraPut.add(imagenes.get(i));
                     }
-                    requests.put("http://localhost:8000/api/productos/" + objetoActual.getCodigo() + "/", estructuraPut);
+                    requests.put("http://icris17.pythonanywhere.com/api/productos/" + objetoActual.getCodigo() + "/", estructuraPut);
                     tfNombre.setText("");
                     tfColor.setText("");
                     tfModelo.setText("");
@@ -910,7 +910,7 @@ public class FModInventario extends javax.swing.JPanel {
                 lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
                 if (imagenActual <= objetoActual.getImagenes().size())
                 {
-                    URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                    URL myURL = new URL("http://icris17.pythonanywhere.com" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
                     Image img = ImageIO.read(myURL.openStream());
                     ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
                     lblSelImg.setIcon(img2);
@@ -946,7 +946,7 @@ public class FModInventario extends javax.swing.JPanel {
                 imagenActual--;
                 lblImagenesCont.setText(imagenActual + " de " + contImagenes + " imágenes agregadas");
                 if (imagenActual <= objetoActual.getImagenes().size()) {
-                    URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                    URL myURL = new URL("http://icris17.pythonanywhere.com" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
                     Image img = ImageIO.read(myURL.openStream());
                     ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
                     lblSelImg.setIcon(img2);
@@ -1003,7 +1003,7 @@ public class FModInventario extends javax.swing.JPanel {
             if (imagenActual > 0) {
                 if (imagenActual <= objetoActual.getImagenes().size()) {
                     try {
-                        URL myURL = new URL("http://localhost:8000" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
+                        URL myURL = new URL("http://icris17.pythonanywhere.com/" + objetoActual.getImagenes().get(imagenActual - 1).getImagen());
                         Image img = ImageIO.read(myURL.openStream());
                         ImageIcon img2 = new ImageIcon(img.getScaledInstance(lblSelImg.getWidth(), lblSelImg.getHeight(), Image.SCALE_SMOOTH));
                         lblSelImg.setIcon(img2);
@@ -1070,7 +1070,7 @@ public class FModInventario extends javax.swing.JPanel {
             int input = JOptionPane.showConfirmDialog(null, "¿Eliminar producto?","Eliminar",JOptionPane.OK_CANCEL_OPTION);
             if (input == 0)
             {
-                requests.delete("http://localhost:8000/api/productos/" + objetoActual.getCodigo() + "/");
+                requests.delete("http://icris17.pythonanywhere.com/api/productos/" + objetoActual.getCodigo() + "/");
                 JOptionPane.showMessageDialog(null, "Producto eliminado satisfactoriamente");
                 reiniciarValores();
             }

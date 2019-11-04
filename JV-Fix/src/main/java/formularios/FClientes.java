@@ -574,7 +574,7 @@ public class FClientes extends javax.swing.JPanel {
     private void cargarInformacion()
     {
         Object O[] = null;
-        listaClientes = (List<Cliente>)requestGet.get("http://localhost:8000/api/clientes/");
+        listaClientes = (List<Cliente>)requestGet.get("http://icris17.pythonanywhere.com/api/clientes/");
         for (int i = 0; i < listaClientes.size(); i++)
         {
             clientes.addRow(O);
@@ -878,7 +878,7 @@ public class FClientes extends javax.swing.JPanel {
             putCliente.get(4).setValor(tfModCumpleanos.getText());
             putCliente.get(5).setValor(cbModRelevancia.getSelectedIndex());
             putCliente.get(6).setValor(tfModCorreo.getText());
-            requests.put("http://localhost:8000/api/clientes/" + objetoActual.getCodigo() + "/", putCliente);
+            requests.put("http://icris17.pythonanywhere.com/api/clientes/" + objetoActual.getCodigo() + "/", putCliente);
             tfModNombre.setText("");
             tfModTelefono.setText("");
             tfModCumpleanos.setText("");
@@ -935,7 +935,7 @@ public class FClientes extends javax.swing.JPanel {
             int input = JOptionPane.showConfirmDialog(null, "¿Eliminar producto?","Eliminar",JOptionPane.OK_CANCEL_OPTION);
             if (input == 0)
             {
-                requests.delete("http://localhost:8000/api/clientes/" + objetoActual.getCodigo() + "/");
+                requests.delete("http://icris17.pythonanywhere.com/api/clientes/" + objetoActual.getCodigo() + "/");
                 JOptionPane.showMessageDialog(null, "Cliente eliminado");
                 while (clientes.getRowCount() > 0) 
                     clientes.removeRow(0);
@@ -960,12 +960,12 @@ public class FClientes extends javax.swing.JPanel {
             postCliente.get(6).setValor(cbRelevancia.getSelectedIndex());
             postCliente.get(7).setValor(tfCorreo.getText());
 
-            if (requests.post("http://localhost:8000/api/clientes/", postCliente)
+            if (requests.post("http://icris17.pythonanywhere.com/api/clientes/", postCliente)
                 .equals("{\"Error\":\"Código ya existe\"}"))
             {
                 JOptionPane.showMessageDialog(null, "El código ingresado ya existe");
             }
-            else if (requests.post("http://localhost:8000/api/clientes/", postCliente)
+            else if (requests.post("http://icris17.pythonanywhere.com/api/clientes/", postCliente)
                 .equals("{\"cumpleanios\":[\"Date has wrong format. Use one of these formats instead: YYYY-MM-DD.\"]}"))
             {
                 JOptionPane.showMessageDialog(null, "El cumpleaños debe de ir en este formato: Año-Mes-Día (AAAA-MM-DD)");

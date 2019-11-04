@@ -142,6 +142,12 @@ public class FInventario extends javax.swing.JPanel {
         btnAgregarImagen1 = new javax.swing.JButton();
         btnModInventario = new javax.swing.JButton();
 
+        addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentRemoved(java.awt.event.ContainerEvent evt) {
+                formComponentRemoved(evt);
+            }
+        });
+
         pnlGeneral.setBackground(new java.awt.Color(34, 51, 59));
         pnlGeneral.setMinimumSize(new java.awt.Dimension(1280, 680));
         pnlGeneral.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -522,7 +528,7 @@ public class FInventario extends javax.swing.JPanel {
                 for (int i = 0; i < imagenes.size(); i++) {
                     postInventario.add(imagenes.get(i));
                 }
-                if (requests.post("http://localhost:8000/api/productos/", postInventario)
+                if (requests.post("http://icris17.pythonanywhere.com/api/productos/", postInventario)
                         .equals("{\"mensaje\":\"El código ya existe\"}"))
                 {
                     JOptionPane.showMessageDialog(null, "El código ingresado ya existe");
@@ -1026,6 +1032,10 @@ public class FInventario extends javax.swing.JPanel {
         this.revalidate();
         this.repaint();
     }//GEN-LAST:event_btnModInventarioActionPerformed
+
+    private void formComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_formComponentRemoved
+
+    }//GEN-LAST:event_formComponentRemoved
 
     String toBinary(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * Byte.SIZE);

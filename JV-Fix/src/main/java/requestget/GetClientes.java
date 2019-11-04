@@ -146,6 +146,82 @@ public class GetClientes implements IRequests{
 
     @Override
     public Object filtrar(String http) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<campos.Cliente> valores = new ArrayList<>();
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpGet httpGet = new HttpGet(http);
+            HttpResponse response = httpClient.execute(httpGet);
+            HttpEntity resEntity = response.getEntity();
+            String resultado = EntityUtils.toString(resEntity);
+            System.out.println(resultado);
+            if (resultado.length() > 2)
+            {
+                int cont = 0;
+                int index = 0;
+                do{
+                    //Para obtener el id del cliente
+                    cont += 7;
+                    String resul = "";
+                    while (resultado.charAt(cont) != ',')
+                    {
+                        resul += resultado.charAt(cont);
+                        cont++;
+                    }
+                    campos.Cliente objeto = new campos.Cliente();
+                    objeto.setId(Integer.parseInt(resul));
+                    //Todo lo anterior es código que nunca va a variar
+                    //Para obtener el código del cliente
+                    cont += 11;
+                    resul = "";
+                    while (resultado.charAt(cont) != '"')
+                    {
+                        resul += resultado.charAt(cont);
+                        cont++;
+                    }
+                    objeto.setCodigo(resul);
+                    //Para obtener el nombre del cliente
+                    cont += 12;
+                    resul = "";
+                    while (resultado.charAt(cont) != '"')
+                    {
+                        resul += resultado.charAt(cont);
+                        cont++;
+                    }
+                    objeto.setNombre(resul);
+                    //Para obtener el nit del cliente
+                    cont += 9;
+                    resul = "";
+                    while (resultado.charAt(cont) != '"')
+                    {
+                        resul += resultado.charAt(cont);
+                        cont++;
+                    }
+                    objeto.setNit(resul);
+                    //Para obtener la direccion del cliente
+                    cont += 15;
+                    resul = "";
+                    while (resultado.charAt(cont) != '"')
+                    {
+                        resul += resultado.charAt(cont);
+                        cont++;
+                    }
+                    objeto.setDireccion(resul);
+                    cont += 2;
+                    valores.add(objeto);
+                    System.out.println("Id: " +valores.get(index).getId());
+                    System.out.println("Codigo: " +valores.get(index).getCodigo());
+                    System.out.println("Nombre: " +valores.get(index).getNombre());
+                    System.out.println("Nit: " +valores.get(index).getNit());
+                    System.out.println("Direccion: " +valores.get(index).getDireccion());
+                    index++;
+                }while (resultado.charAt(cont) == ',');
+            }
+            EntityUtils.consume(resEntity);
+            httpClient.getConnectionManager().shutdown();
+            return valores;
+        } catch (IOException ex) {
+            Logger.getLogger(GetClientes.class.getName()).log(Level.SEVERE, null, ex);
+            return "Error";
+        }
     }
 }
