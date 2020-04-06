@@ -23,5 +23,9 @@ urlpatterns = [
     path('', include('factura.urls')),
     path('', include('detallefactura.urls')),
     path('', include('recursoshumanos.urls')),
+    path('', include('color.urls')),
+    path('', include('marca.urls')),
+    path('', include('clienteServicios.urls')),
+    path('', include('reparaciones.urls')),
     path('admin/', admin.site.urls),
 ]

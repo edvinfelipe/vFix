@@ -42,9 +42,13 @@ INSTALLED_APPS = [
     'categoria',
     'producto',
     'cliente',
+    'clienteServicios',
+    'color',
+    'marca',
     'factura',
     'detallefactura',
     'recursoshumanos',
+    'reparaciones',
 ]
 
 MIDDLEWARE = [
@@ -90,13 +94,13 @@ DATABASES = {
 }
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    #'DEFAULT_PERMISSION_CLASSES': (
-    #    'rest_framework.permissions.IsAuthenticated', )
-}
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework.authentication.TokenAuthentication',
+#     ),
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated', )
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -138,3 +142,5 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,"media")
+
+#AUTH_USER_MODEL = 'recursoshumanos.RH'
