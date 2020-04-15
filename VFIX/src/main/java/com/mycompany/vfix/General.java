@@ -8,6 +8,7 @@ package com.mycompany.vfix;
 import com.mycompany.vfix.clientes.PanelClientes;
 import com.mycompany.vfix.inventario.Inventario;
 import com.mycompany.vfix.reparaciones.Reparaciones;
+import com.mycompany.vfix.usuarios.Usuarios;
 import com.mycompany.vfix.ventas.Ventas;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -137,6 +138,11 @@ public class General extends javax.swing.JFrame {
         btnUsuarios.setText("Usuarios");
         btnUsuarios.setBorder(null);
         btnUsuarios.setBorderPainted(false);
+        btnUsuarios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUsuariosActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnUsuarios, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, -1, 40));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 190, 700));
@@ -169,9 +175,9 @@ public class General extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(384, 384, 384)
+                .addContainerGap(517, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 501, Short.MAX_VALUE)
+                .addGap(368, 368, 368)
                 .addComponent(btnMinimizar)
                 .addGap(36, 36, 36)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -180,16 +186,12 @@ public class General extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton1)
-                            .addComponent(btnMinimizar))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(btnMinimizar)
+                    .addComponent(jLabel1))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 1080, 60));
@@ -258,6 +260,16 @@ public class General extends javax.swing.JFrame {
          Point point = MouseInfo.getPointerInfo().getLocation();
         setLocation(point.x-x, point.y-y);
     }//GEN-LAST:event_formMouseDragged
+
+    private void btnUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsuariosActionPerformed
+        // TODO add your handling code here:
+        Usuarios usuarios = new Usuarios();
+        contenedor.removeAll();
+        contenedor.add(usuarios);
+        contenedor.revalidate();
+        contenedor.repaint();
+        
+    }//GEN-LAST:event_btnUsuariosActionPerformed
 
     /**
      * @param args the command line arguments
