@@ -212,7 +212,7 @@ public class General extends javax.swing.JFrame {
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         // TODO add your handling code here:
-        PanelClientes cliente = new PanelClientes();
+        PanelClientes cliente = new PanelClientes(this);
         contenedor.removeAll();
         contenedor.add(cliente);
         contenedor.revalidate();
