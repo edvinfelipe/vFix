@@ -9,7 +9,7 @@ class RH(models.Model):
 
     #Usuario y contrasenio 
     usuario     = models.CharField(max_length=45,default='')
-    contrasenia = models.CharField(max_length=30,default='')
+    contrasenia = models.CharField(max_length=45,default='')
 
     def deleted(self):
         self.eliminado=True

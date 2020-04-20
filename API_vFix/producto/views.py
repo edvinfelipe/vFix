@@ -60,7 +60,6 @@ class ProductoAPIView(APIView):
 
         # if user.groups.filter(name='admin').exists():
 
-        codigo = request.data.get('codigo')
 
         if codigo is None:
             return Response({'mensaje':'Es necesario que ingrese el código'}, status=status.HTTP_400_BAD_REQUEST)
