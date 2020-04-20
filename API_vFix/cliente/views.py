@@ -73,7 +73,7 @@ class ClienteFilter(APIView):
             elif (nombre != None) and (nit is None):
                 clientes = Cliente.objects.filter(nombre__startswith=nombre, eliminado=False)
             
-            serializer = ClienteFiltradoSerializers(clientes, many=True)
+            serializer = ClienteSerializers(clientes, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
