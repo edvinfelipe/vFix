@@ -7,11 +7,15 @@ class ImagenSerializer(serializers.ModelSerializer):
         fields = ['id','imagen']
 
 class ProductoSerializers(serializers.ModelSerializer):
-    imagenes = ImagenSerializer(many= True)
+    imagenes    = ImagenSerializer(many= True)
+    #marcaId     = serializers.SlugRelatedField( many=False, read_only=True, slug_field='nombre')
+    #colorId     = serializers.SlugRelatedField( many=False, read_only=True, slug_field='nombre')
+    #categoriaId = serializers.SlugRelatedField( many=False, read_only=True, slug_field='nombre')
+    
     class Meta:
         model = Producto
-        fields = ['codigo','nombre','color','modelo','marca','tipo',
-                   'descripcion','existencia','precio','categoriaId','imagenes']
+        fields = ['codigo','nombre','modelo','tipo','descripcion','existencia','precio',
+        'precioMayorista','precioCliente','colorId','marcaId','categoriaId','imagenes']
     
     def create(self, validated_data):
         imagenes_producto   = validated_data.pop('imagenes')
@@ -21,26 +25,40 @@ class ProductoSerializers(serializers.ModelSerializer):
             Imagenes.objects.create(productoId=producto,**imagen)
 
         return producto
+
+class ProductoSerializersLectura( serializers.ModelSerializer ):
+
+        imagenes    = ImagenSerializer(many= True)
+        marcaId     = serializers.SlugRelatedField( many=False, read_only=True, slug_field='nombre')
+        colorId     = serializers.SlugRelatedField( many=False, read_only=True, slug_field='nombre')
+        categoriaId = serializers.SlugRelatedField( many=False, read_only=True, slug_field='nombre')
     
+        class Meta:
+            model = Producto
+            fields = ['codigo','nombre','modelo','tipo','descripcion','existencia','precio',
+            'precioMayorista','precioCliente','colorId','marcaId','categoriaId','imagenes']
+
 class ProductoSerializerModificacion( serializers.ModelSerializer):
     imagenes = ImagenSerializer(many = True)
     class Meta:
         model = Producto
-        fields = ['nombre','color','modelo','marca','tipo',
-                'descripcion','existencia','precio','categoriaId','imagenes']
+        fields = ['nombre','modelo','tipo','descripcion','existencia','precio',
+        'precioMayorista','precioCliente','colorId','marcaId','categoriaId','imagenes']
             
     def update(self, instance, validated_data):
         imagenes_agregar = validated_data.get('imagenes')
 
-        instance.nombre     = validated_data.get('nombre', instance.nombre)
-        instance.color      = validated_data.get('color', instance.color)
-        instance.modelo     = validated_data.get('modelo', instance.modelo)
-        instance.marca      = validated_data.get('marca', instance.marca)
-        instance.tipo       = validated_data.get('tipo', instance.tipo)
-        instance.descripcion= validated_data.get('descripcion', instance.descripcion)
-        instance.existencia = validated_data.get('existencia', instance.existencia)
-        instance.precio     = validated_data.get('precio', instance.precio)
-        instance.categoriaId= validated_data.get('categoriaId', instance.categoriaId)
+        instance.nombre         = validated_data.get('nombre', instance.nombre)
+        instance.modelo         = validated_data.get('modelo', instance.modelo)
+        instance.tipo           = validated_data.get('tipo', instance.tipo)
+        instance.descripcion    = validated_data.get('descripcion', instance.descripcion)
+        instance.existencia     = validated_data.get('existencia', instance.existencia)
+        instance.precio         = validated_data.get('precio', instance.precio)
+        instance.precioMayorista= validated_data.get('precioMayorista', instance.precioMayorista )
+        instance.precioCliente  = validated_data.get('precioCliente', instance.precioCliente )
+        instance.colorId        = validated_data.get('colorId', instance.colorId)
+        instance.marcaId        = validated_data.get('marcaId', instance.marcaId)
+        instance.categoriaId    = validated_data.get('categoriaId', instance.categoriaId)
         instance.save()
 
         for imagen in imagenes_agregar:

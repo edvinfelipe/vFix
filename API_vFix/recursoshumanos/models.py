@@ -2,7 +2,6 @@ from django.db import models
 
 # Create your models here.
 class RH(models.Model):
-    codigo      = models.CharField(max_length=40)
     nombre      = models.CharField(max_length=60)
     rol         = models.BooleanField()
     imagen      = models.ImageField(default=None)
@@ -15,4 +14,3 @@ class RH(models.Model):
     def deleted(self):
         self.eliminado=True
         self.save()
-    

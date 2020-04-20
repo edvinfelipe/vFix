@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import Producto, Imagenes
-from .serializers import ProductoSerializers, ProductoSerializerModificacion, FiltrarProductoSerializers, FiltrarProductoNomCodSerializers
+from .serializers import ProductoSerializers, ProductoSerializerModificacion, FiltrarProductoSerializers, FiltrarProductoNomCodSerializers, ProductoSerializersLectura
 from categoria.models import Categoria
 from rest_framework import permissions
 
@@ -22,16 +22,18 @@ def convertir_datos_json(data):
         
         json['imagenes'] = tempImagenes
 
-    json['codigo'] = data.get('codigo')
-    json['nombre'] = data.get('nombre')
-    json['color'] = data.get('color')
-    json['modelo'] = data.get('modelo')
-    json['marca'] = data.get('marca')
-    json['tipo'] = data.get('tipo')
-    json['descripcion'] = data.get('descripcion')
-    json['existencia'] = data.get('existencia')
-    json['precio'] = data.get('precio')
-    json['categoriaId'] = data.get('categoriaId')
+    json['codigo']          = data.get('codigo')
+    json['nombre']          = data.get('nombre')
+    json['modelo']          = data.get('modelo')
+    json['tipo']            = data.get('tipo')
+    json['descripcion']     = data.get('descripcion')
+    json['existencia']      = data.get('existencia')
+    json['precio']          = data.get('precio')
+    json['precioMayorista'] = data.get('precioMayorista')
+    json['precioCliente']   = data.get('precioCliente')
+    json['colorId']         = data.get('colorId')
+    json['marcaId']         = data.get('marcaId')
+    json['categoriaId']     = data.get('categoriaId')
     return json
 
 def convertir_datos_modificar_json(data, json):
@@ -53,49 +55,65 @@ class ProductoAPIView(APIView):
 
     # Ingreso de un producto
     def post(self, request):
+
+        # user = request.user
+
+        # if user.groups.filter(name='admin').exists():
+
         codigo = request.data.get('codigo')
 
         if codigo is None:
-            return Response({'mensaje':'Es necesario que ingrese el código'})
-        
+            return Response({'mensaje':'Es necesario que ingrese el código'}, status=status.HTTP_400_BAD_REQUEST)
+    
         if Producto.objects.filter(codigo=codigo).exists():
-            return Response({'mensaje':'El código ya existe'})
+            return Response({'mensaje':'El código ya existe'}, status=status.HTTP_302_FOUND)
 
         json = convertir_datos_json(request.data)   # Convertir los datos a formato json
-        
+
         serializer = ProductoSerializers(data=json)
 
-        if serializer.is_valid():          
+        if serializer.is_valid(): 
             serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
-    
+
+            producto = Producto.objects.get(codigo=serializer.data.get('codigo'))
+            serializer1 = ProductoSerializersLectura(instance=producto)
+
+            return Response(serializer1.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+    #return Response(status=status.HTTP_401_UNAUTHORIZED)
+
     def get(self, request):
         try:
             productos = Producto.objects.filter(eliminado=False)
         except:
-            return Response({'Error':'Hubo error en la obtención de los productos'})
-        serializer = ProductoSerializers(productos, many=True)
-        return Response(serializer.data)
+            return Response({'Error':'Hubo error en la obtención de los productos'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProductoSerializersLectura(productos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 # Obtener un sólo producto
 class ProductoDetalle(APIView):
 
     def put(self, request,codigo):
+
+        #user = request.user
+
+       # if user.groups.filter(name='admin').exists():
         try:
             producto = Producto.objects.get(codigo=codigo, eliminado= False)
         except:
-            return Response({'mensaje':'No existe el producto'})
+            return Response({'mensaje':'No existe el producto'}, status=status.HTTP_404_NOT_FOUND)
 
         try:      
             jsonproducto = convertir_datos_json(request.data)                         # Retorno solo el json del producto.                    
             tempjson = convertir_datos_modificar_json(request.data,jsonproducto)      # Retorna el json con imagenes a borrar
             list_img_borrar = tempjson.pop('imagenes_borrar')
-            print(jsonproducto)
+            
             serializer = ProductoSerializerModificacion(producto, data= jsonproducto)
 
             if serializer.is_valid():
-                
+            
                 for id in list_img_borrar:
                     try:
                         Imagenes.objects.filter(pk=id['pk']).delete()
@@ -106,23 +124,30 @@ class ProductoDetalle(APIView):
                 return Response({'mensaje':'Se modificó con éxito'})
         except:
             return Response({'Error':'Hubo erro en la modificación'})
+        
+    #return Response(status=status.HTTP_401_UNAUTHORIZED)
 
     
     def get(self, request, codigo):
         try:
-            producto = Producto.objects.filter(codigo__startswith=codigo, eliminado= False)
-            serializer = ProductoSerializers(producto, many=True)
+            producto = Producto.objects.filter(codigo=codigo, eliminado= False)
+            serializer = ProductoSerializersLectura(producto, many=True)
             return Response(serializer.data)
         except:
             return Response({'Error': 'Hubo un error en la obtención'})
     
     def delete(self, request, codigo):
+        #user = request.user
+
+        #if user.groups.filter(name='admin').exists():
+
         try:
             producto = Producto.objects.get(codigo=codigo, eliminado= False)
             producto.deleted()
-            return Response({'mensaje':'Se eliminó el producto con éxito'})
+            return Response({'mensaje':'Se eliminó el producto con éxito'}, status=status.HTTP_200_OK )
         except:
-            return Response({'Error': 'Hubo error en la eliminación'})        
+            return Response({'Error': 'Hubo error en la eliminación'}, status=status.HTTP_400_BAD_REQUEST )    
+        #return Response(status=status.HTTP_401_UNAUTHORIZED)    
 
 # Filtrar un producto por codigo y nombre, Select * from producto where LIKE;
 class FiltrarProducto(APIView):

@@ -4,7 +4,7 @@ from .models import RH
 class RHSerializers(serializers.ModelSerializer):
     class Meta:
        model = RH
-       fields = ['codigo','nombre','rol','imagen','usuario','contrasenia']
+       fields = ['id','nombre','rol','imagen','usuario','contrasenia']
 
 class RHSerializersModificaicon(serializers.ModelSerializer):
     class Meta:

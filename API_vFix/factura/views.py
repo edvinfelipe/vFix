@@ -70,7 +70,7 @@ class FacturaMovil(APIView):
                     end_date = datetime.date(year, month+1, 31)
 
                 suma = Factura.objects.filter(fecha__range=(start_date, end_date)).aggregate(Sum('total'))
-
+               
                 if  suma.get('total__sum') is None:
                     json['mes'+str(month+1)] = 0
                 else:
