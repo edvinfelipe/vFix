@@ -6,6 +6,8 @@
 package com.mycompany.vfix.inventario;
 
 import com.mycompany.vfix.estilos.TextPrompt;
+import com.mycompany.vfix.inventario.CrearProducto;
+import com.mycompany.vfix.inventario.NuevoP;
 import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -27,7 +29,7 @@ import org.apache.http.entity.mime.content.FileBody;
  *
  * @author carlo
  */
-public class NuevoP extends javax.swing.JFrame {
+public class ModificarP extends javax.swing.JFrame {
     
     private int x;
     private int y;
@@ -36,15 +38,30 @@ public class NuevoP extends javax.swing.JFrame {
     
     private CrearProducto request = new CrearProducto();
 
+    static String codigo;
+    static Producto producto;
     /**
      * Creates new form NuevoP
      */
-    public NuevoP() {
+    public ModificarP(String codigo, Producto producto) {
         initComponents();
         setLocationRelativeTo(null);
         placeHolders();
+        this.codigo = codigo;
+        this.producto = producto;
+        inicializarCampos();
     }
 
+     public void inicializarCampos()
+    {
+        txtCodigo.setText(producto.getCodigo());
+        txtNombre.setText(producto.getNombre());
+        txtModelo.setText(producto.getModelo());
+        txtTipo.setText(producto.getTipo());
+        txtDescripcion.setText(producto.getDescripcion());
+        txtExistencia.setText(String.valueOf(producto.getExistencia()));
+        txtPrecio.setText(String.valueOf(producto.getPrecio()));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -160,7 +177,7 @@ public class NuevoP extends javax.swing.JFrame {
         jButton2.setBackground(new java.awt.Color(26, 46, 70));
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Guardar Producto");
+        jButton2.setText("Modificar Producto");
         jButton2.setBorder(null);
         jButton2.setBorderPainted(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -208,8 +225,8 @@ public class NuevoP extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Nuevo Producto");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 270, -1));
+        jLabel1.setText("Modificar Producto");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 320, -1));
 
         jButton1.setBackground(new java.awt.Color(26, 46, 70));
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
@@ -252,8 +269,9 @@ public class NuevoP extends javax.swing.JFrame {
         // TODO add your handling code here:
         List<String> parametros = new ArrayList<String>();
         asignarParametros(parametros);
-        request.post(parametros, image);
-        JOptionPane.showMessageDialog(null, "El nuevo registro ha sido ingresado con éxito.");
+        String codigo = this.codigo;
+        request.put(parametros, codigo);
+        JOptionPane.showMessageDialog(null, "El  registro ha sido modificado con éxito.");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     
@@ -328,21 +346,6 @@ public class NuevoP extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(NuevoP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

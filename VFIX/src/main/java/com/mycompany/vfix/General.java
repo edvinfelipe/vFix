@@ -96,7 +96,7 @@ public class General extends javax.swing.JFrame {
         btnInventario.setBackground(new java.awt.Color(26, 46, 70));
         btnInventario.setFont(new java.awt.Font("Tahoma", 0, 22)); // NOI18N
         btnInventario.setForeground(new java.awt.Color(255, 255, 255));
-        btnInventario.setText("Inverntario");
+        btnInventario.setText("Inventario");
         btnInventario.setBorder(null);
         btnInventario.setBorderPainted(false);
         btnInventario.addActionListener(new java.awt.event.ActionListener() {
