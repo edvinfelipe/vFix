@@ -6,6 +6,8 @@
 package com.mycompany.vfix.usuarios;
 
 
+import com.mycompany.vfix.usuarios.peticiones.DecoradorPeticion;
+import com.mycompany.vfix.usuarios.peticiones.Peticion;
 import java.io.File;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;

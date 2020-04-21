@@ -5,15 +5,28 @@
  */
 package com.mycompany.vfix.usuarios;
 
+import com.mycompany.vfix.usuarios.peticiones.InsertarUsuario;
+import com.mycompany.vfix.usuarios.peticiones.FabricaPeticion;
+import com.mycompany.vfix.usuarios.peticiones.Peticion;
+import com.mycompany.vfix.usuarios.peticiones.EjecutarPeticion;
 import com.mycompany.vfix.estilos.TextPrompt;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.apache.http.HttpEntity;
 
 /**
  *
@@ -23,7 +36,7 @@ public class NuevoUsuario extends javax.swing.JFrame {
     
     private int x;
     private int y;
-    private String rutaImagen="fgfgfg";
+    private String rutaImagen="";
     /**
      * Creates new form NuevoUsuario
      */
@@ -45,10 +58,8 @@ public class NuevoUsuario extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnCerrar = new javax.swing.JButton();
-        txtCodigo = new javax.swing.JTextField();
-        jSeparator3 = new javax.swing.JSeparator();
         txtNombre = new javax.swing.JTextField();
-        jSeparator4 = new javax.swing.JSeparator();
+        jSeparator3 = new javax.swing.JSeparator();
         txtUsuario = new javax.swing.JTextField();
         jSeparator5 = new javax.swing.JSeparator();
         txtContra = new javax.swing.JPasswordField();
@@ -58,6 +69,7 @@ public class NuevoUsuario extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         btnEmpleado = new javax.swing.JButton();
+        rol = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -99,26 +111,19 @@ public class NuevoUsuario extends javax.swing.JFrame {
 
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 40));
 
-        txtCodigo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtCodigo.setBorder(null);
-        jPanel1.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 190, 30));
+        txtNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtNombre.setBorder(null);
+        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 190, 30));
 
         jSeparator3.setBackground(new java.awt.Color(54, 159, 128));
         jPanel1.add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, 190, 10));
 
-        txtNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        txtNombre.setBorder(null);
-        jPanel1.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 190, 30));
-
-        jSeparator4.setBackground(new java.awt.Color(54, 159, 128));
-        jPanel1.add(jSeparator4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 180, 190, 10));
-
         txtUsuario.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtUsuario.setBorder(null);
-        jPanel1.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, 190, 30));
+        jPanel1.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 220, 190, 30));
 
         jSeparator5.setBackground(new java.awt.Color(54, 159, 128));
-        jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 240, 190, 10));
+        jPanel1.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 190, 10));
 
         txtContra.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtContra.setBorder(null);
@@ -127,17 +132,17 @@ public class NuevoUsuario extends javax.swing.JFrame {
                 txtContraActionPerformed(evt);
             }
         });
-        jPanel1.add(txtContra, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 270, 190, 30));
+        jPanel1.add(txtContra, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 280, 190, 30));
 
         jSeparator7.setBackground(new java.awt.Color(54, 159, 128));
-        jPanel1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 300, 190, 10));
+        jPanel1.add(jSeparator7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, 190, 10));
 
         txtConfirmarContra.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         txtConfirmarContra.setBorder(null);
-        jPanel1.add(txtConfirmarContra, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 190, 30));
+        jPanel1.add(txtConfirmarContra, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 340, 190, 30));
 
         jSeparator8.setBackground(new java.awt.Color(54, 159, 128));
-        jPanel1.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 360, 190, 10));
+        jPanel1.add(jSeparator8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 190, 10));
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(54, 159, 128)));
@@ -167,6 +172,11 @@ public class NuevoUsuario extends javax.swing.JFrame {
         });
         jPanel1.add(btnEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 480, 250, 40));
 
+        rol.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        rol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Empleado" }));
+        rol.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Rol", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14), new java.awt.Color(54, 159, 128))); // NOI18N
+        jPanel1.add(rol, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 190, 50));
+
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 540, 600));
 
         pack();
@@ -178,7 +188,7 @@ public class NuevoUsuario extends javax.swing.JFrame {
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
@@ -196,9 +206,22 @@ public class NuevoUsuario extends javax.swing.JFrame {
     private void btnEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEmpleadoActionPerformed
         // TODO add your handling code here:  
         if(validarCamposdeTexto()){
-            Peticion insertarEmpleado = new InsertarUsuario(txtNombre.getText(),txtUsuario.getText(),txtConfirmarContra.getText(),true);
-            FabricaPeticion fabricaPeticion = new FabricaPeticion();
-            Peticion peticion = fabricaPeticion.getPeticion(insertarEmpleado, rutaImagen);
+            
+           if(txtContra.getText().equals(txtConfirmarContra.getText())){
+              
+                   Peticion insertarEmpleado = new InsertarUsuario(txtNombre.getText(),txtUsuario.getText(),Encriptacion.getEncriptacion(txtContra.getText()),
+                           validarRol(rol.getSelectedItem().toString()));
+                   
+                   FabricaPeticion fabricaPeticion = new FabricaPeticion();
+                   Peticion peticion = fabricaPeticion.getPeticion(insertarEmpleado, rutaImagen);
+                   EjecutarPeticion ejecutarPeticion = new EjecutarPeticion();
+                   
+                   ejecutarPeticion.Insertar(peticion.getPeticion().build());
+           
+           }else{
+               JOptionPane.showMessageDialog(null, "Las contraseñas no coincicen");
+           }
+            
         }else{
             JOptionPane.showMessageDialog(null,"Debe llenar todos los campos");
         }
@@ -207,11 +230,11 @@ public class NuevoUsuario extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         JFileChooser jFileChooser = new JFileChooser();
-        FileFilter imaFileFilter = new FileNameExtensionFilter("png","jpg");
+        FileFilter imaFileFilter = new FileNameExtensionFilter("Imagenes","png","jpg");
         jFileChooser.addChoosableFileFilter(imaFileFilter);
-        int aprovado = jFileChooser.showOpenDialog(this);
+        int aprobado = jFileChooser.showOpenDialog(this);
         
-        if(aprovado==JFileChooser.APPROVE_OPTION){
+        if(aprobado==JFileChooser.APPROVE_OPTION){
             File file = jFileChooser.getSelectedFile();
             System.out.println(file);
         }
@@ -254,16 +277,27 @@ public class NuevoUsuario extends javax.swing.JFrame {
     
     private void placeHolder(){
         TextPrompt nombre = new TextPrompt("Nombre", txtNombre);
-        TextPrompt codigo = new TextPrompt("Codigo", txtCodigo);
         TextPrompt usuario = new TextPrompt("Usuario", txtUsuario);
         TextPrompt contrasena = new TextPrompt("Contraseña", txtContra);
-        TextPrompt confirmarContra = new TextPrompt("Repetir Contraseña", txtConfirmarContra);
+        TextPrompt confirmarContra = new TextPrompt("Confirmar Contraseña", txtConfirmarContra);
         
     }
     
     private boolean validarCamposdeTexto(){
      
          return !txtNombre.getText().isEmpty() && !txtUsuario.getText().isEmpty() && !txtContra.getText().isEmpty();
+    }
+    
+    private boolean validarRol(String rol){
+        
+        return rol.equals("Administrador");
+    }
+    
+    private void limpiarCampos(){
+        txtNombre.setText("");
+        txtUsuario.setText("");
+        txtContra.setText("");
+        txtConfirmarContra.setText("");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -275,11 +309,10 @@ public class NuevoUsuario extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSeparator jSeparator3;
-    private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
-    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JComboBox<String> rol;
     private javax.swing.JPasswordField txtConfirmarContra;
     private javax.swing.JPasswordField txtContra;
     private javax.swing.JTextField txtNombre;

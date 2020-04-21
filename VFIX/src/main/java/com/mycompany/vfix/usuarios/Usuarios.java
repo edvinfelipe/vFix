@@ -5,7 +5,9 @@
  */
 package com.mycompany.vfix.usuarios;
 
+import com.mycompany.vfix.usuarios.peticiones.EjecutarPeticion;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -92,15 +94,26 @@ public class Usuarios extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        String nombre = tablaEmpleados.getValueAt(tablaEmpleados.getSelectedRow(),0).toString();
-        String rol = tablaEmpleados.getValueAt(tablaEmpleados.getSelectedRow(), 1).toString();
-        PanelModificarUsuario panelModificarUsuario = new PanelModificarUsuario();
-        panelModificarUsuario.setNombre(nombre);
-        panelModificarUsuario.setRol(rol);
-        panelModificarUsuario.setImagen(datosEmpleados.stream()
+        
+        if(tablaEmpleados.getSelectedRow()!=-1){
+            String nombre = tablaEmpleados.getValueAt(tablaEmpleados.getSelectedRow(),0).toString();
+            String rol = tablaEmpleados.getValueAt(tablaEmpleados.getSelectedRow(), 1).toString();
+            PanelModificarUsuario panelModificarUsuario = new PanelModificarUsuario();
+            panelModificarUsuario.setNombre(nombre);
+            panelModificarUsuario.setRol(rol);
+            panelModificarUsuario.setImagen(datosEmpleados.stream()
                 .filter(empleado -> empleado.getNombre().equals(nombre))
-                .map(DatosEmpleado::getNombre).findAny().orElse(""));
-        panelModificarUsuario.setVisible(true);
+                .filter(empleado -> empleado.getImagen()!=null)
+                .map(DatosEmpleado::getImagen).findAny().orElse(""));
+            panelModificarUsuario.setId(datosEmpleados.stream()
+                .filter(empleado -> empleado.getNombre().equals(nombre))
+                .map(DatosEmpleado::getId).findAny().orElse(0));
+            panelModificarUsuario.setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null,"NO ha seleccionado a ningun empleado");
+        }
+        
+        
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
