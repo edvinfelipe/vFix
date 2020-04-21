@@ -35,7 +35,7 @@ public class FachadaClientes {
     public void post(List<String> parametros)
     {
         try {
-            String url = "http://localhost:8000/api/clientes/";
+            String url = "http://icris17.pythonanywhere.com/api/clientes/";
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(url);
             
@@ -69,20 +69,20 @@ public class FachadaClientes {
         String url = "";
         if (filtro.length() > 0)
             if (interruptor)//Si se está buscando por nombre
-                url = "http://localhost:8000/api/clientes/filtrar/?nombre=" + queryFiltro(filtro);            
+                url = "http://icris17.pythonanywhere.com/api/clientes/filtrar/?nombre=" + queryFiltro(filtro);            
             else//Si se está buscando por nit
             {
                 if (!cf)//Si no es consumidor final, filtrar por nit
-                    url = "http://localhost:8000/api/clientes/filtrar/?nit=" + queryFiltro(filtro);            
+                    url = "http://icris17.pythonanywhere.com/api/clientes/filtrar/?nit=" + queryFiltro(filtro);            
                 else//Si es consumidor final, filtrar a estos
-                    url = "http://localhost:8000/api/clientes/filtrar/?nit=c/f";
+                    url = "http://icris17.pythonanywhere.com/api/clientes/filtrar/?nit=c/f";
             }  
         else
         {
             if (!cf)//Si no es consumidor final, filtrar por nit
-                url = "http://localhost:8000/api/clientes/";
+                url = "http://icris17.pythonanywhere.com/api/clientes/";
             else//Si es consumidor final, filtrar a estos
-                url = "http://localhost:8000/api/clientes/filtrar/?nit=c/f";
+                url = "http://icris17.pythonanywhere.com/api/clientes/filtrar/?nit=c/f";
         }
         try {
             String result = "";
@@ -125,7 +125,7 @@ public class FachadaClientes {
     public void put(List<String> parametros, Integer idCliente)
     {
         try {
-            String url = "http://localhost:8000/api/clientes/" + idCliente + "/";
+            String url = "http://icris17.pythonanywhere.com/api/clientes/" + idCliente + "/";
             //String url = "";
             HttpClient httpclient = HttpClients.createDefault();
             HttpPut httpput = new HttpPut(url);
@@ -133,16 +133,11 @@ public class FachadaClientes {
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
             params.add(new BasicNameValuePair("nombre",parametros.get(0)));
             params.add(new BasicNameValuePair("telefono",parametros.get(1)));
-            if (parametros.get(2).length() > 0)
-                params.add(new BasicNameValuePair("nit",parametros.get(2)));
-            if (parametros.get(3).length() > 0)
-                params.add(new BasicNameValuePair("direccion",parametros.get(3)));
-            if (parametros.get(4).length() > 0)
-                params.add(new BasicNameValuePair("cumpleanios",parametros.get(4)));
-            if (parametros.get(5).length() > 0)
-                params.add(new BasicNameValuePair("estrellas",parametros.get(5)));
-            if (parametros.get(6).length() > 0)
-                params.add(new BasicNameValuePair("correo",parametros.get(6)));
+            params.add(new BasicNameValuePair("nit",parametros.get(2)));
+            params.add(new BasicNameValuePair("direccion",parametros.get(3)));
+            params.add(new BasicNameValuePair("cumpleanios",parametros.get(4)));
+            params.add(new BasicNameValuePair("estrellas",parametros.get(5)));
+            params.add(new BasicNameValuePair("correo",parametros.get(6)));
             httpput.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
             
             HttpResponse response = httpclient.execute(httpput);
@@ -157,7 +152,7 @@ public class FachadaClientes {
     public void delete(Integer idCliente)
     {
         try {
-            String url = "http://localhost:8000/api/clientes/" + idCliente + "/";
+            String url = "http://icris17.pythonanywhere.com/api/clientes/" + idCliente + "/";
             HttpClient httpclient = HttpClients.createDefault();
             HttpDelete httpdelete = new HttpDelete(url);
             String result = "";          
