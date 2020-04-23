@@ -175,7 +175,7 @@ public class General extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(517, Short.MAX_VALUE)
+                .addContainerGap(511, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(368, 368, 368)
                 .addComponent(btnMinimizar)
@@ -191,7 +191,7 @@ public class General extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(btnMinimizar)
                     .addComponent(jLabel1))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 1080, 60));

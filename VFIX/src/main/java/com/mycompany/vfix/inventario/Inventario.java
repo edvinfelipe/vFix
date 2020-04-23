@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.apache.http.HttpResponse;
@@ -36,6 +37,7 @@ public class Inventario extends javax.swing.JPanel {
     private CrearProducto request = new CrearProducto();
     List<Integer> idProducto = new ArrayList();
     List<String> codigoProducto = new ArrayList();
+    
     public Inventario() {
         initComponents();
         DefaultTableModel modelo = new DefaultTableModel();
@@ -177,6 +179,9 @@ public class Inventario extends javax.swing.JPanel {
         // TODO add your handling code here:
         NuevoP producto = new NuevoP();
         producto.setVisible(true);
+        
+        
+        request.get((DefaultTableModel)jTable1.getModel(), "", idProducto);
     }//GEN-LAST:event_btnNuevoProductoActionPerformed
 
     private void btnPruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPruebaActionPerformed
@@ -207,7 +212,9 @@ public class Inventario extends javax.swing.JPanel {
         String dato=String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(),0));
         ModificarP modificarproducto = new ModificarP(dato, obtenerProducto());
         modificarproducto.setVisible(true);
+        
         DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
+        request.get(modelo, "", idProducto);
         
         
     }//GEN-LAST:event_btnModificarActionPerformed

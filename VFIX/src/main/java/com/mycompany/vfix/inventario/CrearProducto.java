@@ -137,27 +137,25 @@ public class CrearProducto {
             Producto[] producto = gson.fromJson(result, Producto[].class);
             int i = 0;
             for (Producto productos : producto){
-
-                    idProducto.add(productos.getId());
-                    Object fila[] = null;
-                    modelo.addRow(fila);
-                    modelo.setValueAt(productos.getCodigo(), i, 0);
-                    modelo.setValueAt(productos.getNombre(), i, 1);
-                    modelo.setValueAt(productos.getModelo(), i, 2);
-                    modelo.setValueAt(productos.getTipo(), i, 3);
-                    modelo.setValueAt(productos.getDescripcion(), i, 4);                       
-                    modelo.setValueAt(productos.getExistencia(), i, 5);
-                    modelo.setValueAt(productos.getPrecio(), i, 6);
-                    modelo.setValueAt(productos.getColorId(), i, 7);
-                    modelo.setValueAt(productos.getMarcaId(), i, 8);
-                    modelo.setValueAt(productos.getCategoriaId(), i, 9);
-                    i++;
-                   
+                idProducto.add(productos.getId());
+                Object fila[] = null;
+                modelo.addRow(fila);
+                modelo.setValueAt(productos.getCodigo(), i, 0);
+                modelo.setValueAt(productos.getNombre(), i, 1);
+                modelo.setValueAt(productos.getModelo(), i, 2);
+                modelo.setValueAt(productos.getTipo(), i, 3);
+                modelo.setValueAt(productos.getDescripcion(), i, 4);                       
+                modelo.setValueAt(productos.getExistencia(), i, 5);
+                modelo.setValueAt(productos.getPrecio(), i, 6);
+                modelo.setValueAt(productos.getColorId(), i, 7);
+                modelo.setValueAt(productos.getMarcaId(), i, 8);
+                modelo.setValueAt(productos.getCategoriaId(), i, 9);
+                i++;
             }
                 
             
         } catch (IOException ex) {
-            Logger.getLogger(FachadaClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CrearProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
         }
         
@@ -169,7 +167,7 @@ public class CrearProducto {
             String result = "";          
             HttpResponse response = httpclient.execute(httpdelete);
         } catch (IOException ex) {
-            Logger.getLogger(FachadaClientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CrearProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -207,7 +205,7 @@ public class CrearProducto {
                 result = EntityUtils.toString(response.getEntity());
                 System.out.println(result);
             } catch (IOException ex) {
-                Logger.getLogger(FachadaClientes.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CrearProducto.class.getName()).log(Level.SEVERE, null, ex);
             }
         }   
 }

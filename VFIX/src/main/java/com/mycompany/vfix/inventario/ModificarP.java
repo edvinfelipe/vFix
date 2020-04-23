@@ -272,6 +272,7 @@ public class ModificarP extends javax.swing.JFrame {
         String codigo = this.codigo;
         request.put(parametros, codigo);
         JOptionPane.showMessageDialog(null, "El  registro ha sido modificado con éxito.");
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     

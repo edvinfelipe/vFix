@@ -13,6 +13,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -33,16 +34,32 @@ public class NuevoP extends javax.swing.JFrame {
     private int y;
     //String imagen="";
     FileBody image = null;
+    List<Integer> idCategoria = new ArrayList();
     
     private CrearProducto request = new CrearProducto();
+    private ConsultarCategorias reqCategoria = new ConsultarCategorias();
 
     /**
      * Creates new form NuevoP
      */
     public NuevoP() {
+        cargarComboBox();
+        jComboBox1.addItem("Prueba");
+        
         initComponents();
         setLocationRelativeTo(null);
         placeHolders();
+    }
+    public void cargarComboBox(){
+        DefaultComboBoxModel categoria = new DefaultComboBoxModel();
+        /*categoria.addElement("Holi");
+        categoria.addElement("Holi");
+        categoria.addElement("Holi");
+        categoria.addElement("Holi");
+        categoria = (DefaultComboBoxModel)this.jComboBox1.getModel();*/
+        //categoria.removeAllElements();
+        
+        //reqCategoria.get(categoria, idCategoria);
     }
 
     /**
@@ -78,6 +95,7 @@ public class NuevoP extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cmbMarca = new javax.swing.JComboBox<>();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
@@ -188,6 +206,7 @@ public class NuevoP extends javax.swing.JFrame {
         jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, 310, 50));
 
         cmbCategoria.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", " " }));
         jPanel2.add(cmbCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 180, -1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -200,6 +219,9 @@ public class NuevoP extends javax.swing.JFrame {
 
         cmbMarca.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(cmbMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 180, -1));
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jPanel2.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 420, -1, -1));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 670, 720));
 
@@ -360,6 +382,7 @@ public class NuevoP extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
