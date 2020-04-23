@@ -39,11 +39,11 @@ public class ConsultarCategorias {
             HttpClient httpclient = HttpClients.createDefault();
             HttpGet httpget = new HttpGet("");
             if(opcion == 1){
-                httpget = new HttpGet("http://localhost:8000/api/categorias/");
+                httpget = new HttpGet("http://icris17.pythonanywhere.com/api/categorias/");
             }else if(opcion == 2){
-                httpget = new HttpGet("http://localhost:8000/api/marcas/");
+                httpget = new HttpGet("http://icris17.pythonanywhere.com/api/marcas/");
             }else{
-                httpget = new HttpGet("http://localhost:8000/api/colores/");
+                httpget = new HttpGet("http://icris17.pythonanywhere.com/api/colores/");
             }
             
             

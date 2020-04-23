@@ -47,7 +47,7 @@ public class CrearProducto {
     {
         try {
               HttpClient httpclient = new DefaultHttpClient();
-              HttpPost httppost = new HttpPost("http://localhost:8000/api/productos/");
+              HttpPost httppost = new HttpPost("http://icris17.pythonanywhere.com/api/productos/");
               MultipartEntity reqEntity = new MultipartEntity();
               reqEntity.addPart("codigo", new StringBody( parametros.get(0))) ;
               reqEntity.addPart("nombre", new StringBody(parametros.get(1)));
@@ -96,11 +96,11 @@ public class CrearProducto {
                 modelo.removeRow(0);
             String path = "";
             if (!codigo.equals("") && idCategoria == 0){
-                path = "http://localhost:8000/api/productos/"+codigo;
+                path = "http://icris17.pythonanywhere.com/api/productos/"+codigo;
             }else if(idCategoria > 0){
-                path = "http://localhost:8000/api/productos/categoria/"+idCategoria;
+                path = "http://icris17.pythonanywhere.com/api/productos/categoria/"+idCategoria;
             }else{
-                path = "http://localhost:8000/api/productos/";
+                path = "http://icris17.pythonanywhere.com/api/productos/";
             }
             
             try {
@@ -144,7 +144,7 @@ public class CrearProducto {
          */
         public void delete(String codigoProducto){
         try {
-            String url = "http://localhost:8000/api/productos/" + codigoProducto + "/";
+            String url = "http://icris17.pythonanywhere.com/api/productos/" + codigoProducto + "/";
             HttpClient httpclient = HttpClients.createDefault();
             HttpDelete httpdelete = new HttpDelete(url);
             String result = "";          
@@ -163,7 +163,7 @@ public class CrearProducto {
         {
             try {
                 System.out.println("EL CODIGO ES:" + codigo);
-                String url = "http://localhost:8000/api/productos/" + codigo+"/";
+                String url = "http://icris17.pythonanywhere.com/api/productos/" + codigo+"/";
                 //String url = "";
                 HttpClient httpclient = HttpClients.createDefault();
                 HttpPut httpput = new HttpPut(url);
