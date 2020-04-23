@@ -26,7 +26,6 @@ public class General extends javax.swing.JFrame {
      */
     public General() {
         initComponents();
-        
       
     }
 
@@ -205,7 +204,7 @@ public class General extends javax.swing.JFrame {
 
     private void btnInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventarioActionPerformed
         // TODO add your handling code here:
-        Inventario inventario = new Inventario();
+        Inventario inventario = new Inventario(this);
         contenedor.removeAll();
         contenedor.add(inventario);
         contenedor.revalidate();

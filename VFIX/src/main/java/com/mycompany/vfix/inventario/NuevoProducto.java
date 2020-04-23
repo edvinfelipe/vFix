@@ -6,15 +6,11 @@
 package com.mycompany.vfix.inventario;
 
 import com.mycompany.vfix.estilos.TextPrompt;
-import com.mycompany.vfix.inventario.CrearProducto;
-import com.mycompany.vfix.inventario.NuevoP;
 import java.awt.Image;
-import java.awt.MouseInfo;
-import java.awt.Point;
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -23,45 +19,43 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.http.entity.mime.content.FileBody;
 
-
-
 /**
  *
- * @author carlo
+ * @author Usuario
  */
-public class ModificarP extends javax.swing.JFrame {
+public class NuevoProducto extends javax.swing.JDialog {
+
+    /**
+     * Creates new form NuevoProducto
+     */
     
-    private int x;
-    private int y;
-    //String imagen="";
     FileBody image = null;
+    List<Integer> idCategoria = new ArrayList();
     
     private CrearProducto request = new CrearProducto();
-
-    static String codigo;
-    static Producto producto;
-    /**
-     * Creates new form NuevoP
-     */
-    public ModificarP(String codigo, Producto producto) {
+    private ConsultarCategorias reqCategoria = new ConsultarCategorias();
+    
+    public NuevoProducto(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
-        setLocationRelativeTo(null);
-        placeHolders();
-        this.codigo = codigo;
-        this.producto = producto;
-        inicializarCampos();
+        this.setLocationRelativeTo(null);//Centrar JDialog
+        placeHolders();//Asignar estilos a los jText
+        this.setResizable(false);
+        //cmbCategoria.addItem("PRUEBA :/(");
+        DefaultComboBoxModel categoria = new DefaultComboBoxModel();
+        categoria = (DefaultComboBoxModel)this.cmbCategoria.getModel();
+        reqCategoria.get(categoria, idCategoria, 1);
+        categoria.removeElementAt(0);
+        //DefaultComboBoxModel marca = new DefaultComboBoxModel();
+        categoria = (DefaultComboBoxModel)this.cmbMarca.getModel();
+        reqCategoria.get(categoria, idCategoria, 2);
+        categoria.removeElementAt(0);
+        //DefaultComboBoxModel color = new DefaultComboBoxModel();
+        categoria = (DefaultComboBoxModel)this.cmbColor.getModel();
+        reqCategoria.get(categoria, idCategoria, 3432);
+        categoria.removeElementAt(0);
     }
 
-     public void inicializarCampos()
-    {
-        txtCodigo.setText(producto.getCodigo());
-        txtNombre.setText(producto.getNombre());
-        txtModelo.setText(producto.getModelo());
-        txtTipo.setText(producto.getTipo());
-        txtDescripcion.setText(producto.getDescripcion());
-        txtExistencia.setText(String.valueOf(producto.getExistencia()));
-        txtPrecio.setText(String.valueOf(producto.getPrecio()));
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -71,6 +65,9 @@ public class ModificarP extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
@@ -95,23 +92,30 @@ public class ModificarP extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cmbMarca = new javax.swing.JComboBox<>();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setUndecorated(true);
-        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                formMouseDragged(evt);
+
+        jPanel1.setBackground(new java.awt.Color(26, 46, 70));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Nuevo Producto");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 270, -1));
+
+        jButton1.setBackground(new java.awt.Color(26, 46, 70));
+        jButton1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("X");
+        jButton1.setBorder(null);
+        jButton1.setBorderPainted(false);
+        jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
-        addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                formMousePressed(evt);
-            }
-        });
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 0, 40, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(54, 159, 128)));
@@ -177,7 +181,7 @@ public class ModificarP extends javax.swing.JFrame {
         jButton2.setBackground(new java.awt.Color(26, 46, 70));
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 30)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Modificar Producto");
+        jButton2.setText("Guardar Producto");
         jButton2.setBorder(null);
         jButton2.setBorderPainted(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -205,6 +209,7 @@ public class ModificarP extends javax.swing.JFrame {
         jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 280, 310, 50));
 
         cmbCategoria.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        cmbCategoria.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", " " }));
         jPanel2.add(cmbCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 180, -1));
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -218,50 +223,31 @@ public class ModificarP extends javax.swing.JFrame {
         cmbMarca.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jPanel2.add(cmbMarca, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 180, -1));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 670, 720));
-
-        jPanel1.setBackground(new java.awt.Color(26, 46, 70));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Modificar Producto");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 0, 320, -1));
-
-        jButton1.setBackground(new java.awt.Color(26, 46, 70));
-        jButton1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("X");
-        jButton1.setBorder(null);
-        jButton1.setBorderPainted(false);
-        jButton1.setContentAreaFilled(false);
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 0, 40, -1));
-
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 50));
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 774, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
-        // TODO add your handling code here:
-        x= evt.getX();
-        y = evt.getY();
-    }//GEN-LAST:event_formMousePressed
-
-    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
-        // TODO add your handling code here:
-        Point point = MouseInfo.getPointerInfo().getLocation();
-        setLocation(point.x-x, point.y-y);
-    }//GEN-LAST:event_formMouseDragged
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
+
         this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -269,13 +255,10 @@ public class ModificarP extends javax.swing.JFrame {
         // TODO add your handling code here:
         List<String> parametros = new ArrayList<String>();
         asignarParametros(parametros);
-        String codigo = this.codigo;
-        request.put(parametros, codigo);
-        JOptionPane.showMessageDialog(null, "El  registro ha sido modificado con éxito.");
-        this.setVisible(false);
+        request.post(parametros, image);
+        JOptionPane.showMessageDialog(null, "El nuevo registro ha sido ingresado con éxito.");
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
         JFileChooser jFileChooser = new JFileChooser();
@@ -293,6 +276,10 @@ public class ModificarP extends javax.swing.JFrame {
             image=data;
         }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
     
     private void asignarParametros(List<String> lista)
     {
@@ -305,9 +292,9 @@ public class ModificarP extends javax.swing.JFrame {
         lista.add(txtPrecio.getText());
         lista.add("0"); //Precio mayorista
         lista.add("0"); //Precio cliente
-        lista.add("1"); //colorId
-        lista.add("1"); //marcaId
-        lista.add("1"); //categoriaId
+        lista.add(String.valueOf(cmbColor.getSelectedIndex()+1)); //colorId
+        lista.add(String.valueOf(cmbMarca.getSelectedIndex()+1)); //marcaId
+        lista.add(String.valueOf(cmbCategoria.getSelectedIndex()+1)); //categoriaId
     }
     
     private void placeHolders(){
@@ -322,9 +309,6 @@ public class ModificarP extends javax.swing.JFrame {
        TextPrompt descripcion = new TextPrompt("Descripcion", txtDescripcion);
        
     }
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -339,20 +323,27 @@ public class ModificarP extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NuevoP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NuevoP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NuevoP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NuevoP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(NuevoProducto.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
-        /* Create and display the form */
+        /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new NuevoP().setVisible(true);
+                NuevoProducto dialog = new NuevoProducto(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
         });
     }

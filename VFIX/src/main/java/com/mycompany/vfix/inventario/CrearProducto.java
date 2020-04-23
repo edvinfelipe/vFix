@@ -41,31 +41,6 @@ public class CrearProducto {
         public void post(List<String> parametros,FileBody imagen)
     {
         try {
-            //HttpClient httpclient = HttpClients.createDefault();
-          /*  HttpPost request = new HttpPost("http://localhost:8000/api/productos/");
-            HttpClient httpclient = HttpClients.createDefault();
-            MultipartEntity reqEntity = new MultipartEntity();
-            
-            List<NameValuePair> datos = new ArrayList<NameValuePair>(2);
-            datos.add(new BasicNameValuePair("codigo",parametros.get(0)));
-            datos.add(new BasicNameValuePair("nombre",parametros.get(1)));
-            datos.add(new BasicNameValuePair("modelo",parametros.get(2)));
-            datos.add(new BasicNameValuePair("tipo",parametros.get(3)));
-            datos.add(new BasicNameValuePair("descripcion",parametros.get(4)));
-            datos.add(new BasicNameValuePair("existencia",parametros.get(5)));
-            datos.add(new BasicNameValuePair("precio",parametros.get(6)));
-            datos.add(new BasicNameValuePair("precioMayorista",parametros.get(7)));
-            datos.add(new BasicNameValuePair("precioCliente",parametros.get(8)));
-            datos.add(new BasicNameValuePair("colorId",parametros.get(9)));
-            datos.add(new BasicNameValuePair("marcaId",parametros.get(10)));
-            datos.add(new BasicNameValuePair("categoriaId",parametros.get(11)));
-            reqEntity.addPart("data", imagen);
-            
-           // datos.add(new BasicNameValuePair("imagenes",parametros.get(12)));
-           // System.out.println(parametros.get(12));
-
-            request.setEntity(new UrlEncodedFormEntity(datos, "UTF-8"));
-            HttpResponse response = httpclient.execute(request);*/
               HttpClient httpclient = new DefaultHttpClient();
               HttpPost httppost = new HttpPost("http://localhost:8000/api/productos/");
               MultipartEntity reqEntity = new MultipartEntity();
@@ -81,16 +56,10 @@ public class CrearProducto {
               reqEntity.addPart("colorId", new StringBody(parametros.get(9)));
               reqEntity.addPart("marcaId", new StringBody(parametros.get(10)));
               reqEntity.addPart("categoriaId", new StringBody(parametros.get(11)));
-              
-              //System.out.println(imagen.getFilename());
-              //System.out.println(imagen.getCharset());
-              
               if(imagen!=null){
                   reqEntity.addPart("imagenes", imagen);
               }
-              
               httppost.setEntity(reqEntity);
-
               HttpResponse response = httpclient.execute(httppost);
               System.out.println( "------- imagen -----" ) ;
               System.out.println( imagen ) ;
@@ -103,23 +72,21 @@ public class CrearProducto {
 
               EntityUtils.consume(resEntity);
               httpclient.getConnectionManager().shutdown();
-          
-            //System.out.println("Llego aquí");
-            
-            //HttpResponse response = httpclient.execute(httppost);
         } catch (IOException ex) {
             Logger.getLogger(CrearProducto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
         
-        public void get(DefaultTableModel modelo, String codigo, List<Integer> idProducto){
+        public void get(DefaultTableModel modelo, String codigo, List<Integer> idProducto, int categoria){
             while (idProducto.size() > 0)
                 idProducto.remove(0);
             while (modelo.getRowCount() > 0)
                 modelo.removeRow(0);
             String path = "";
-            if (!codigo.equals("")){
+            if (!codigo.equals("") && categoria == 0){
                 path = "http://localhost:8000/api/productos/"+codigo;
+            }else if(categoria > 0){
+                path = "http://localhost:8000/api/productos/categoria/"+categoria;
             }else{
                 path = "http://localhost:8000/api/productos/";
             }

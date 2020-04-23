@@ -5,6 +5,7 @@
  */
 package com.mycompany.vfix.inventario;
 
+import java.awt.Frame;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -35,12 +36,23 @@ public class Inventario extends javax.swing.JPanel {
      * Creates new form Inventario
      */
     private CrearProducto request = new CrearProducto();
+    private ConsultarCategorias reqCategoria = new ConsultarCategorias();
     List<Integer> idProducto = new ArrayList();
+    List<Integer> idCategoria = new ArrayList();
     List<String> codigoProducto = new ArrayList();
+    Frame padre;
+    int verificar = 0;
     
-    public Inventario() {
+    
+    public Inventario(Frame padre) {
         initComponents();
+        
+        this.padre = padre;
         DefaultTableModel modelo = new DefaultTableModel();
+        DefaultComboBoxModel categoria = new DefaultComboBoxModel();
+        categoria = (DefaultComboBoxModel)this.jComboBox1.getModel();
+        reqCategoria.get(categoria, idCategoria, 1);
+        
         modelo.addColumn("Codigo");
         modelo.addColumn("Nombre");
         modelo.addColumn("Modelo");
@@ -52,8 +64,8 @@ public class Inventario extends javax.swing.JPanel {
         modelo.addColumn("Marca");
         modelo.addColumn("Categoria");
         jTable1.setModel(modelo);
-        request.get(modelo, "", idProducto);
-        
+        request.get(modelo, "", idProducto,0);
+        verificar = 1;
     }
 
     /**
@@ -76,7 +88,6 @@ public class Inventario extends javax.swing.JPanel {
         jComboBox1 = new javax.swing.JComboBox<>();
         btnModificar = new javax.swing.JButton();
         btnDesactivar = new javax.swing.JButton();
-        btnPrueba = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -136,6 +147,16 @@ public class Inventario extends javax.swing.JPanel {
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Categorias", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
         add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 200, -1));
 
         btnModificar.setBackground(new java.awt.Color(26, 46, 70));
@@ -161,14 +182,6 @@ public class Inventario extends javax.swing.JPanel {
             }
         });
         add(btnDesactivar, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 420, 120, 40));
-
-        btnPrueba.setText("Prueba");
-        btnPrueba.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPruebaActionPerformed(evt);
-            }
-        });
-        add(btnPrueba, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 430, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtFiltroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFiltroActionPerformed
@@ -177,45 +190,29 @@ public class Inventario extends javax.swing.JPanel {
 
     private void btnNuevoProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoProductoActionPerformed
         // TODO add your handling code here:
-        NuevoP producto = new NuevoP();
+        NuevoProducto nuevoProducto = new NuevoProducto(padre, true);
+        nuevoProducto.setVisible(true);
+        request.get((DefaultTableModel)jTable1.getModel(), "", idProducto,0);
+       /* NuevoP producto = new NuevoP();
         producto.setVisible(true);
-        
-        
-        request.get((DefaultTableModel)jTable1.getModel(), "", idProducto);
+        request.get((DefaultTableModel)jTable1.getModel(), "", idProducto);*/       
     }//GEN-LAST:event_btnNuevoProductoActionPerformed
-
-    private void btnPruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPruebaActionPerformed
-        // TODO add your handling code here:   
-        try {
-            //String url = "http://localhost:8000/api/colores/";
-            HttpClient httpclient = HttpClients.createDefault();
-            HttpPost request = new HttpPost("http://localhost:8000/api/colores/");
-            
-            List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-            params.add(new BasicNameValuePair("nombre","Blancardo"));
-            request.setEntity(new UrlEncodedFormEntity(params, "UTF-8")); 
-            
-            HttpResponse response = httpclient.execute(request);
-        } catch (IOException ex) {
-            Logger.getLogger(Inventario.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btnPruebaActionPerformed
 
     private void txtFiltroKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFiltroKeyReleased
         // TODO add your handling code here:
         DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
-        request.get(modelo, txtFiltro.getText(),idProducto);
+        request.get(modelo, txtFiltro.getText(),idProducto,0);
+
     }//GEN-LAST:event_txtFiltroKeyReleased
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:    
         String dato=String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(),0));
-        ModificarP modificarproducto = new ModificarP(dato, obtenerProducto());
-        modificarproducto.setVisible(true);
-        
-        DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
-        request.get(modelo, "", idProducto);
-        
+        ModificarProducto modificarProducto = new ModificarProducto(padre, true,dato,obtenerProducto());
+        modificarProducto.setVisible(true);
+        //ModificarP modificarproducto = new ModificarP(dato, obtenerProducto());
+        //modificarproducto.setVisible(true);
+        request.get((DefaultTableModel)jTable1.getModel(), "", idProducto,0);
         
     }//GEN-LAST:event_btnModificarActionPerformed
 
@@ -229,11 +226,24 @@ public class Inventario extends javax.swing.JPanel {
             String dato=String.valueOf(modelo.getValueAt(jTable1.getSelectedRow(),0));
            // int seleccionado = idProducto.get(jTable1.getSelectedRow());
             request.delete(dato);
-            request.get(modelo, txtFiltro.getText(), idProducto);
+            request.get(modelo, txtFiltro.getText(), idProducto,0);
             
             JOptionPane.showMessageDialog(null, "Cliente eliminado con éxito");
         }
     }//GEN-LAST:event_btnDesactivarActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+        if (verificar!= 0){
+            DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
+            request.get(modelo, txtFiltro.getText(),idProducto,jComboBox1.getSelectedIndex());
+        }
+        //request.get(modelo, txtFiltro.getText(), idProducto,jComboBox1.getSelectedIndex()+1);
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
 
     private Producto obtenerProducto()
     {
@@ -245,7 +255,9 @@ public class Inventario extends javax.swing.JPanel {
         producto.setDescripcion(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 4)));
         producto.setExistencia(Integer.parseInt(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 5))));
         producto.setPrecio(Float.parseFloat(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 6))));
-        
+        producto.setCategoriaId(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 9)));
+        producto.setMarcaId(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 8)));
+        producto.setColorId(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 7)));
         return producto;
     }
 
@@ -253,7 +265,6 @@ public class Inventario extends javax.swing.JPanel {
     private javax.swing.JButton btnDesactivar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevoProducto;
-    private javax.swing.JButton btnPrueba;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

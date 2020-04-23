@@ -25,13 +25,26 @@ import org.apache.http.util.EntityUtils;
  */
 public class ConsultarCategorias {
     
-    
-            public void get(DefaultComboBoxModel modelo,  List<Integer> idProducto){
+            /**
+             * 
+             * @param modelo
+             * @param idProducto
+             * @param opcion opcion para el get donde 1 es categoria, 2 marca y 3 color
+             */
+            public void get(DefaultComboBoxModel modelo,  List<Integer> idProducto, int opcion){
             modelo.removeAllElements();
             try {
             String result = "";
             HttpClient httpclient = HttpClients.createDefault();
-            HttpGet httpget = new HttpGet("http://localhost:8000/api/categorias/");
+            HttpGet httpget = new HttpGet("");
+            if(opcion == 1){
+                httpget = new HttpGet("http://localhost:8000/api/categorias/");
+            }else if(opcion == 2){
+                httpget = new HttpGet("http://localhost:8000/api/marcas/");
+            }else{
+                httpget = new HttpGet("http://localhost:8000/api/colores/");
+            }
+            
             
             HttpResponse response = httpclient.execute(httpget);
             HttpEntity entity = response.getEntity();
@@ -39,11 +52,11 @@ public class ConsultarCategorias {
             
             Gson gson = new Gson();
             Categoria[] categoria = gson.fromJson(result, Categoria[].class);
-            int i = 0;
+            
+            modelo.addElement("");
             for (Categoria categorias : categoria){
                 idProducto.add(categorias.getId());
                 modelo.addElement(categorias.getNombre());
-                i++;  
             }
                 
             
