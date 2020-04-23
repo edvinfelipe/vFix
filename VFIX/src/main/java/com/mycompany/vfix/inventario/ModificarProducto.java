@@ -47,13 +47,13 @@ public class ModificarProducto extends javax.swing.JDialog {
         this.producto = producto;
         DefaultComboBoxModel categoria = new DefaultComboBoxModel();
         categoria = (DefaultComboBoxModel)this.cmbCategoria.getModel();
-        reqCategoria.get(categoria, idCategoria, 1);
+        reqCategoria.get(categoria, idCategoria, 1); //get para poder cargar todas las categorias al comboBox
         categoria.removeElementAt(0);
         categoria = (DefaultComboBoxModel)this.cmbMarca.getModel();
-        reqCategoria.get(categoria, idCategoria, 2);
+        reqCategoria.get(categoria, idCategoria, 2); //get para poder cargar todas las  marcas al comboBox
         categoria.removeElementAt(0);
         categoria = (DefaultComboBoxModel)this.cmbColor.getModel();
-        reqCategoria.get(categoria, idCategoria, 3432);
+        reqCategoria.get(categoria, idCategoria, 3432); //get para poder cargar todas los colores al comboBox
         categoria.removeElementAt(0);
         inicializarCampos();
     }
@@ -321,6 +321,11 @@ public class ModificarProducto extends javax.swing.JDialog {
             }
         });
     }
+    
+    /**
+     * Procedimiento que almacenará los datos de los diferentes campos en la lista.
+     * @param lista Lista de tipo string que almacenara todos los datos para realizar una modificación.
+     */
     private void asignarParametros(List<String> lista)
     {
         lista.add(txtCodigo.getText());
@@ -349,7 +354,10 @@ public class ModificarProducto extends javax.swing.JDialog {
        
     }
     
-         public void inicializarCampos()
+    /**
+     * Procedimiento que cargará los datos a los diferentes campos.
+     */
+    public void inicializarCampos()
     {
         txtCodigo.setText(producto.getCodigo());
         txtCodigo.setEditable(false);

@@ -210,8 +210,6 @@ public class Inventario extends javax.swing.JPanel {
         String dato=String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(),0));
         ModificarProducto modificarProducto = new ModificarProducto(padre, true,dato,obtenerProducto());
         modificarProducto.setVisible(true);
-        //ModificarP modificarproducto = new ModificarP(dato, obtenerProducto());
-        //modificarproducto.setVisible(true);
         request.get((DefaultTableModel)jTable1.getModel(), "", idProducto,0);
         
     }//GEN-LAST:event_btnModificarActionPerformed
@@ -224,7 +222,6 @@ public class Inventario extends javax.swing.JPanel {
         {
             DefaultTableModel modelo = (DefaultTableModel)jTable1.getModel();
             String dato=String.valueOf(modelo.getValueAt(jTable1.getSelectedRow(),0));
-           // int seleccionado = idProducto.get(jTable1.getSelectedRow());
             request.delete(dato);
             request.get(modelo, txtFiltro.getText(), idProducto,0);
             
@@ -245,6 +242,10 @@ public class Inventario extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ItemStateChanged
 
+    /**
+     * Función que devolverá todos los parametros que se encuentre cargados en los diferentes campos de la tabla.
+     * @return 
+     */
     private Producto obtenerProducto()
     {
         Producto producto = new Producto();

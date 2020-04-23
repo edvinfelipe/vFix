@@ -44,14 +44,12 @@ public class NuevoProducto extends javax.swing.JDialog {
         //cmbCategoria.addItem("PRUEBA :/(");
         DefaultComboBoxModel categoria = new DefaultComboBoxModel();
         categoria = (DefaultComboBoxModel)this.cmbCategoria.getModel();
-        reqCategoria.get(categoria, idCategoria, 1);
+        reqCategoria.get(categoria, idCategoria, 1);  //get para poder cargar todas las categorias al comboBox
         categoria.removeElementAt(0);
-        //DefaultComboBoxModel marca = new DefaultComboBoxModel();
-        categoria = (DefaultComboBoxModel)this.cmbMarca.getModel();
+        categoria = (DefaultComboBoxModel)this.cmbMarca.getModel();  //get para poder cargar todas las marcas al comboBox
         reqCategoria.get(categoria, idCategoria, 2);
         categoria.removeElementAt(0);
-        //DefaultComboBoxModel color = new DefaultComboBoxModel();
-        categoria = (DefaultComboBoxModel)this.cmbColor.getModel();
+        categoria = (DefaultComboBoxModel)this.cmbColor.getModel(); //get para poder cargar todas los colores al comboBox
         reqCategoria.get(categoria, idCategoria, 3432);
         categoria.removeElementAt(0);
     }
@@ -281,6 +279,10 @@ public class NuevoProducto extends javax.swing.JDialog {
      * @param args the command line arguments
      */
     
+    /**
+     * Procedimiento que guardará todos los datos que se encuentran en los campos.
+     * @param lista Lista de tipo String donde se almacenarán todos los datos.
+     */
     private void asignarParametros(List<String> lista)
     {
         lista.add(txtCodigo.getText());

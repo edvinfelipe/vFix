@@ -22,14 +22,15 @@ import org.apache.http.util.EntityUtils;
 /**
  *
  * @author Usuario
+ * 
  */
 public class ConsultarCategorias {
     
             /**
              * 
-             * @param modelo
-             * @param idProducto
-             * @param opcion opcion para el get donde 1 es categoria, 2 marca y 3 color
+             * @param modelo ComboBox en el cual se cargarán los datos solicitados por el parametro opcion
+             * @param idProducto 
+             * @param opcion opcion para la funcion get donde 1 es categoria, 2 marca y 3 color
              */
             public void get(DefaultComboBoxModel modelo,  List<Integer> idProducto, int opcion){
             modelo.removeAllElements();

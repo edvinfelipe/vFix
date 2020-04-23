@@ -6,9 +6,10 @@
 package com.mycompany.vfix.inventario;
 
 /**
- *
+ *Clase Prodcuto donde se almacenarán las variables que corresponderán a los diferentes campos de la tabla Productos
  * @author Usuario
  */
+
 public class Producto {
     private int id;
     private String codigo;

@@ -8,6 +8,7 @@ package com.mycompany.vfix.inventario;
 /**
  *
  * @author Usuario
+ * Clase cateogoria que albergará los datos de las tablas categorias/marcas/colores
  */
 public class Categoria {
     private int id;

@@ -38,6 +38,11 @@ import org.apache.http.util.EntityUtils;
  */
 public class CrearProducto {
     
+    /**
+     * Procedimiento para realizar una inserción en la tabla productos.
+     * @param parametros    Lista de tipo String donde se almacenarán todos los parámetros para la tabla productos.
+     * @param imagen        Variable que se enviará para poder almacenar y asociar una imagen a un producto.
+     */
         public void post(List<String> parametros,FileBody imagen)
     {
         try {
@@ -77,16 +82,23 @@ public class CrearProducto {
         }
     }
         
-        public void get(DefaultTableModel modelo, String codigo, List<Integer> idProducto, int categoria){
+        /**
+         * Procedimiento que consultará y devolverá los datos de la tabla producto dependiendo de los filtros que se le envén.
+         * @param modelo    Tabla a la que se cargarán los datos obtenidos por la función get.
+         * @param codigo    Cadena que devolverá el producto que coincida con codigo. 
+         * @param idProducto    
+         * @param idCategoria Entero que se debe enviar si se desea buscar por id de una determinada categoria, se envia 0 si no se desea aplicar este filtro
+         */
+        public void get(DefaultTableModel modelo, String codigo, List<Integer> idProducto, int idCategoria){
             while (idProducto.size() > 0)
                 idProducto.remove(0);
             while (modelo.getRowCount() > 0)
                 modelo.removeRow(0);
             String path = "";
-            if (!codigo.equals("") && categoria == 0){
+            if (!codigo.equals("") && idCategoria == 0){
                 path = "http://localhost:8000/api/productos/"+codigo;
-            }else if(categoria > 0){
-                path = "http://localhost:8000/api/productos/categoria/"+categoria;
+            }else if(idCategoria > 0){
+                path = "http://localhost:8000/api/productos/categoria/"+idCategoria;
             }else{
                 path = "http://localhost:8000/api/productos/";
             }
@@ -126,6 +138,10 @@ public class CrearProducto {
         }
         }
         
+        /**
+         * Procedimiento que eliminará un determinado producto.
+         * @param codigoProducto Cadena que eliminará un producto si coincide con codigoProducto.
+         */
         public void delete(String codigoProducto){
         try {
             String url = "http://localhost:8000/api/productos/" + codigoProducto + "/";
@@ -138,7 +154,11 @@ public class CrearProducto {
         }
     }
 
-
+        /**
+         * Procedimiento para poder modificar un producto existente.
+         * @param parametros Lista de parametros los cuales contienen la nueva información para ser actualizado el registro.
+         * @param codigo Código que corresponde al producto que se modificará.
+         */
         public void put(List<String> parametros, String codigo)
         {
             try {
