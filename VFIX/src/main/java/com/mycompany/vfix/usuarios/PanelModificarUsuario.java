@@ -5,6 +5,10 @@
  */
 package com.mycompany.vfix.usuarios;
 
+import com.mycompany.vfix.usuarios.peticiones.ModificarUsuario;
+import com.mycompany.vfix.usuarios.peticiones.FabricaPeticion;
+import com.mycompany.vfix.usuarios.peticiones.Peticion;
+import com.mycompany.vfix.usuarios.peticiones.EjecutarPeticion;
 import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -25,6 +29,7 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
     
     
     private String imagen="";
+    private String idEmpleado;
     private int x;
     private int y;
     
@@ -208,7 +213,7 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
-        this.setVisible(false);
+        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImagenActionPerformed
@@ -241,6 +246,9 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
             Peticion peticion = new ModificarUsuario(txtNombre.getText(),retornarRol(txtNuevoRol.getText()));
             FabricaPeticion fabricaPeticion = new FabricaPeticion();
             Peticion modificarUsuario = fabricaPeticion.getPeticion(peticion, imagen);
+            EjecutarPeticion ejecutarPeticion = new EjecutarPeticion();
+            ejecutarPeticion.actualizar(modificarUsuario.getPeticion().build(),idEmpleado);
+            System.out.println("Id Empleado: "+idEmpleado);
         }else{
             JOptionPane.showInternalMessageDialog(null, "Debe llenar todos lo campos");
         }
@@ -298,6 +306,10 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
     
     public void setImagen(String imagen){
         this.imagen=imagen;
+    }
+    
+    public void setId(int idEmpleado){
+        this.idEmpleado=String.valueOf(idEmpleado);
     }
     
     private ImageIcon cargarImagen(){

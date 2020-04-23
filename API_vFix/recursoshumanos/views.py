@@ -14,12 +14,14 @@ class RHAPIView(APIView):
 
     def post(self,request):
         
+        user = request.user
         # Solo se ejecuta una vez
         if not Group.objects.filter(name='admin').exists():
             Group.objects.create(name='admin')                  # Grupo de administradores
             Group.objects.create(name='staff')                  # Grupo de empleados
+            user.groups.add(Group.objects.get(name='admin'))
 
-        #user = request.user
+        
 
         #if user.groups.filter(name='admin').exists():
 
@@ -103,7 +105,7 @@ class RHDetalle(APIView):
         
 
 class Login(APIView):    
-    #permission_classes = [permissions.AllowAny]   
+    permission_classes = [permissions.AllowAny]   
     def post(self,request):
         username = request.data.get('usuario')
         password = request.data.get('contrasenia')
