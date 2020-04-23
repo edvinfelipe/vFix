@@ -27,8 +27,6 @@ public class General extends javax.swing.JFrame {
     public General() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
-      
     }
 
     /**
@@ -97,7 +95,7 @@ public class General extends javax.swing.JFrame {
         btnInventario.setBackground(new java.awt.Color(26, 46, 70));
         btnInventario.setFont(new java.awt.Font("Tahoma", 0, 22)); // NOI18N
         btnInventario.setForeground(new java.awt.Color(255, 255, 255));
-        btnInventario.setText("Inverntario");
+        btnInventario.setText("Inventario");
         btnInventario.setBorder(null);
         btnInventario.setBorderPainted(false);
         btnInventario.addActionListener(new java.awt.event.ActionListener() {
@@ -211,7 +209,7 @@ public class General extends javax.swing.JFrame {
 
     private void btnInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventarioActionPerformed
         // TODO add your handling code here:
-        Inventario inventario = new Inventario();
+        Inventario inventario = new Inventario(this);
         contenedor.removeAll();
         contenedor.add(inventario);
         contenedor.revalidate();
