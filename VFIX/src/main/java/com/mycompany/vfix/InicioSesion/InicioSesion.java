@@ -6,6 +6,7 @@
 package com.mycompany.vfix.InicioSesion;
 
 import com.mycompany.vfix.General;
+import com.mycompany.vfix.Header;
 import com.mycompany.vfix.estilos.TextPrompt;
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -154,9 +155,10 @@ public class InicioSesion extends javax.swing.JFrame {
            
            if(!"null".equals(token.getToken())){
                
-               General general = new General();
-               general.setVisible(true);
-               this.setVisible(false);
+                 Header.setValue(token.getToken()); // Asignacion de token
+                 General general = new General();
+                 general.setVisible(true);
+                 this.setVisible(false);
            }else{
                
                JOptionPane.showMessageDialog(null,"Usuario o Contraseña Incorrectos");
