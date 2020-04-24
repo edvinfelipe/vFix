@@ -7,6 +7,7 @@ package com.mycompany.vfix.InicioSesion;
 
 import com.mycompany.vfix.General;
 import com.mycompany.vfix.estilos.TextPrompt;
+import com.mycompany.vfix.usuarios.Encriptacion;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import javax.swing.JOptionPane;
@@ -149,7 +150,7 @@ public class InicioSesion extends javax.swing.JFrame {
         
         if(validaCampos()){
             
-           InicioDeSesion inicioDeSesion = new InicioDeSesion(txtUsuario.getText(),txtContrasenia.getText());
+           InicioDeSesion inicioDeSesion = new InicioDeSesion(txtUsuario.getText(),Encriptacion.getEncriptacion(txtContrasenia.getText()));
            Login token = inicioDeSesion.validarUsuario();
            
            if(!"null".equals(token.getToken())){

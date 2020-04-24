@@ -213,7 +213,7 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setVisible(false);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImagenActionPerformed
@@ -248,6 +248,8 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
             Peticion modificarUsuario = fabricaPeticion.getPeticion(peticion, imagen);
             EjecutarPeticion ejecutarPeticion = new EjecutarPeticion();
             ejecutarPeticion.actualizar(modificarUsuario.getPeticion().build(),idEmpleado);
+            limpiarCampos();
+            JOptionPane.showMessageDialog(null,"Modificacion exitosa");
             System.out.println("Id Empleado: "+idEmpleado);
         }else{
             JOptionPane.showInternalMessageDialog(null, "Debe llenar todos lo campos");
@@ -347,6 +349,11 @@ public class PanelModificarUsuario extends javax.swing.JFrame {
     
     private boolean retornarRol(String rol){
         return rol.equals("Administrador");
+    }
+    
+    private void limpiarCampos(){
+        txtNombre.setText("");
+        txtNuevoRol.setText("");
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

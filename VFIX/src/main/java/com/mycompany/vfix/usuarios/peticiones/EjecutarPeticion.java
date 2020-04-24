@@ -8,7 +8,6 @@ package com.mycompany.vfix.usuarios.peticiones;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mycompany.vfix.usuarios.DatosEmpleado;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -24,7 +23,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -36,7 +34,7 @@ import org.apache.http.util.EntityUtils;
 public class EjecutarPeticion {
 
     
-    private final String urlBase = "http://localhost:8000/api/recursoshumanos/";
+    private final String urlBase = "http://icris17.pythonanywhere.com/api/recursoshumanos/";
             
     public EjecutarPeticion() {
     

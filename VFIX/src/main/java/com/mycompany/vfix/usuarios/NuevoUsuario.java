@@ -13,20 +13,10 @@ import com.mycompany.vfix.estilos.TextPrompt;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonReader;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.http.HttpEntity;
 
 /**
  *
@@ -188,7 +178,7 @@ public class NuevoUsuario extends javax.swing.JFrame {
 
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         // TODO add your handling code here:
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setVisible(false);
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void formMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMousePressed
@@ -217,6 +207,8 @@ public class NuevoUsuario extends javax.swing.JFrame {
                    EjecutarPeticion ejecutarPeticion = new EjecutarPeticion();
                    
                    ejecutarPeticion.Insertar(peticion.getPeticion().build());
+                   JOptionPane.showMessageDialog(null,"Empleado ingresado correctamente");
+                   limpiarCampos();
            
            }else{
                JOptionPane.showMessageDialog(null, "Las contraseñas no coincicen");
