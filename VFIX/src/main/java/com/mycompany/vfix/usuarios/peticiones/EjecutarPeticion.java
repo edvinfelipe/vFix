@@ -7,6 +7,7 @@ package com.mycompany.vfix.usuarios.peticiones;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mycompany.vfix.Header;
 import com.mycompany.vfix.usuarios.DatosEmpleado;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -77,6 +78,11 @@ public class EjecutarPeticion {
             Gson gson = new Gson();
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet(urlBase);
+            
+            //Header.setValue("1f9c0f3d413546db067661b9db7024383776a8a4");
+            
+            httpGet.setHeader( Header.getName() , Header.getValue() );
+            
             CloseableHttpResponse response = (CloseableHttpResponse) httpClient.execute(httpGet);
             JsonReader reader = Json.createReader(new InputStreamReader((response.getEntity().getContent())));
             JsonArray array = reader.readArray();
