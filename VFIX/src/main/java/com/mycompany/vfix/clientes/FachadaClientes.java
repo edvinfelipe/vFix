@@ -6,6 +6,7 @@
 package com.mycompany.vfix.clientes;
 
 import com.google.gson.Gson;
+import com.mycompany.vfix.Header;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class FachadaClientes {
             String url = "http://icris17.pythonanywhere.com/api/clientes/";
             HttpClient httpclient = HttpClients.createDefault();
             HttpPost httppost = new HttpPost(url);
-            
+            httppost.setHeader( Header.getName() , Header.getValue() );
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
             params.add(new BasicNameValuePair("nombre",parametros.get(0)));
             params.add(new BasicNameValuePair("telefono",parametros.get(1)));
@@ -88,7 +89,7 @@ public class FachadaClientes {
             String result = "";
             HttpClient httpclient = HttpClients.createDefault();
             HttpGet httpget = new HttpGet(url);
-            
+            httpget.setHeader( Header.getName() , Header.getValue() );
             HttpResponse response = httpclient.execute(httpget);
             HttpEntity entity = response.getEntity();
             result = EntityUtils.toString(response.getEntity(), "utf-8");
@@ -126,9 +127,9 @@ public class FachadaClientes {
     {
         try {
             String url = "http://icris17.pythonanywhere.com/api/clientes/" + idCliente + "/";
-            //String url = "";
             HttpClient httpclient = HttpClients.createDefault();
             HttpPut httpput = new HttpPut(url);
+            httpput.setHeader( Header.getName() , Header.getValue() );
             String result = "";
             List<NameValuePair> params = new ArrayList<NameValuePair>(2);
             params.add(new BasicNameValuePair("nombre",parametros.get(0)));
@@ -155,6 +156,7 @@ public class FachadaClientes {
             String url = "http://icris17.pythonanywhere.com/api/clientes/" + idCliente + "/";
             HttpClient httpclient = HttpClients.createDefault();
             HttpDelete httpdelete = new HttpDelete(url);
+            httpdelete.setHeader( Header.getName() , Header.getValue() );
             String result = "";          
             HttpResponse response = httpclient.execute(httpdelete);
         } catch (IOException ex) {
